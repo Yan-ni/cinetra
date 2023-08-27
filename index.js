@@ -23,7 +23,7 @@ app.get('/search', async (req, res) => {
     return res.json([]);
 
   // TODO: put token in env var
-  const Authorization = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNGRjNTU3MmFiYTk4NWZjNDg1OTczZTJkOGY4ODUwZSIsInN1YiI6IjY0YjFmYWZkMzc4MDYyMDBhZDEzZjM3YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AM186NGcSALAzSrLfm3kAhEvYaEg9wh1sVLeEmfnHGU';
+  const Authorization = process.env.API_AUTHORIZATION;
   try {
     let response = await fetch(`https://api.themoviedb.org/3/search/tv?query=${query}`, { headers: { Authorization } });
     if(response.status !== 200)
