@@ -28,7 +28,8 @@ export default function AddShowModal({modalOpened, setModalOpened, shows, setSho
     if(search.length === 0)
       setSearchResult([]);
     else {
-      axios.get(`${import.meta.env.VITE_API_PATH}/search?q=${search}`).then((res) => {
+      const API_PATH = import.meta.env.VITE_API_PATH;
+      axios.get(`${API_PATH ? API_PATH : ''}/search?q=${search}`).then((res) => {
         if(res.status === 200)
           setSearchResult(res.data);
         else
