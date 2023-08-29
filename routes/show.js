@@ -1,45 +1,49 @@
-const router = require('express').Router();
-const Show = require('../models/Show');
+const router = require("express").Router();
+const Show = require("../models/Show");
 
-router.get('/show/:id?', async (req, res) => {
+router.get("/show/:id?", async (req, res) => {
   const showId = req.params.id;
 
-  if(showId) {
+  if (showId) {
     const show = await Show.findById(showId);
 
     res.json(show);
   } else {
-    const shows = await Show.find().sort({'updatedAt': -1});
+    const shows = await Show.find().sort({ updatedAt: -1 });
 
     res.json(shows);
   }
 });
 
-router.post('/show', async (req, res) => {
+router.post("/show", async (req, res) => {
   try {
-    const show = await Show.create(req.body);
+    const exists = await Show.findById(req.body?._id);
 
-    res.status(201).json(show);
+    if (exists) {
+      res.sendStatus(409);
+    } else {
+      const show = await Show.create(req.body);
+
+      res.status(201).json(show);
+    }
   } catch (err) {
     console.error(err);
   }
 });
 
-router.put('/show/:id', async (req, res) => {
+router.put("/show/:id", async (req, res) => {
   const showId = req.params.id;
   const { body } = req;
 
-  
-  if(showId && body) {
+  if (showId && body) {
     const show = await Show.findOne({ _id: showId });
 
-    if(!show)
-      return res.sendStatus(204);
+    if (!show) return res.sendStatus(204);
 
-    if(Number.isInteger(body.seasonsWatched))
+    if (Number.isInteger(body.seasonsWatched))
       show.seasonsWatched = body.seasonsWatched;
 
-    if(Number.isInteger(body.episodesWatched))
+    if (Number.isInteger(body.episodesWatched))
       show.episodesWatched = body.episodesWatched;
 
     await show.save();
@@ -49,14 +53,13 @@ router.put('/show/:id', async (req, res) => {
   }
 });
 
-router.delete('/show/:id', async (req, res) => {
+router.delete("/show/:id", async (req, res) => {
   const showId = req.params.id;
 
-  if(showId) {
+  if (showId) {
     await Show.deleteOne({ _id: showId });
     res.sendStatus(200);
   }
 });
-
 
 module.exports = router;

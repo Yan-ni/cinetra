@@ -12,17 +12,19 @@ export default function AddShowModal({
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
+  const [_id, set_id] = useState("");
   const [name, setName] = useState("");
   const [overview, setOverview] = useState("");
   const [posterURL, setPosterURL] = useState("");
 
-  const handleChange = debounce((value) => {
+  const handleSearchInput = debounce((value) => {
     setSearch(value);
   }, 600);
 
   const resetstates = () => {
     setSearch("");
     setSearchResult("");
+    set_id("");
     setName("");
     setOverview("");
     setPosterURL("");
@@ -53,12 +55,22 @@ export default function AddShowModal({
             e.preventDefault();
             axios
               .post(`${import.meta.env.VITE_API_PATH}/show`, {
+                _id,
                 name,
                 overview,
                 posterURL,
               })
               .then((res) => {
                 if (res.status === 201) setShows([res.data, ...shows]);
+              })
+              .catch((err) => {
+                console.error(err.response.status);
+                if (err.response.status === 409)
+                  alert(
+                    "the show you're trying to add already exists in your list."
+                  );
+              })
+              .finally(() => {
                 setModalOpened(false);
                 resetstates();
               });
@@ -66,13 +78,17 @@ export default function AddShowModal({
         >
           <div className="input-group">
             <label htmlFor="searchShow">search the show you want to add</label>
-            <input type="text" onChange={(e) => handleChange(e.target.value)} />
+            <input
+              type="text"
+              onChange={(e) => handleSearchInput(e.target.value)}
+            />
             <div className="searchResult">
               {searchResult &&
                 searchResult.map((sr, i) => (
                   <div
                     key={i}
                     onClick={() => {
+                      set_id(sr._id);
                       setName(sr.name);
                       setOverview(sr.overview);
                       setPosterURL(
