@@ -13,72 +13,72 @@
 
 /************** Typography **************/
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-Italic.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-Italic.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-Italic.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-Italic.woff") format("woff");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-ExtraBold.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-ExtraBold.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-ExtraBold.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-ExtraBold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-Light.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-Light.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-Light.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-SemiBold.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-SemiBold.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-SemiBold.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-LightItalic.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-LightItalic.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-LightItalic.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-LightItalic.woff") format("woff");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-Bold.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-Bold.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-Bold.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-Medium.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-Medium.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-Medium.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/Open Sans/OpenSans-Regular.woff2') format('woff2'),
-      url('/fonts/Open Sans/OpenSans-Regular.woff') format('woff');
+  font-family: "Open Sans";
+  src: url("/fonts/Open Sans/OpenSans-Regular.woff2") format("woff2"),
+    url("/fonts/Open Sans/OpenSans-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -87,11 +87,11 @@
 body {
   background: #212121;
   color: #fff;
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
 }
 
 .app {
-  padding: 1rem 2rem;
+  padding: 1rem;
   max-width: 1000px;
   margin: 0 auto;
   position: relative;
@@ -110,7 +110,7 @@ h2 {
 }
 
 h3 {
-  margin-block: 0.7rem; 
+  margin-block: 0.7rem;
 }
 
 .input-group {
@@ -140,7 +140,7 @@ button {
   border: none;
   color: #fff;
   background-color: rgb(88, 101, 242);
-  transition: background-color .17s ease,color .17s ease;
+  transition: background-color 0.17s ease, color 0.17s ease;
 }
 
 button:hover {
@@ -166,7 +166,6 @@ textarea:focus {
   outline: none;
   border-color: #999;
 }
-
 
 .modalBG {
   width: 100vw;
@@ -209,18 +208,42 @@ textarea:focus {
   display: block;
 }
 
+.shows {
+  margin-top: 1rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+}
+
 .show {
-  margin: 15px 0;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  cursor: pointer;
 }
 
-.show-img {
+.show::after {
+  content: "";
+  background: linear-gradient(0deg, rgb(0, 0, 0), rgba(0, 0, 0, 0));
   width: 100%;
+  height: 30%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
-.show-img img {
+.show img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.show h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  z-index: 1;
 }
 
 .searchResult {
