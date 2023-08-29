@@ -11,7 +11,7 @@ function App() {
   const [shows, setShows] = useState([]);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_PATH}/show`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_PATH || ""}/show`).then((res) => {
       if (res.status === 200 && Array.isArray(res.data)) setShows(res.data);
     });
   }, []);

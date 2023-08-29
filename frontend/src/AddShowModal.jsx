@@ -33,9 +33,8 @@ export default function AddShowModal({
   useEffect(() => {
     if (search.length === 0) setSearchResult([]);
     else {
-      const API_PATH = import.meta.env.VITE_API_PATH;
       axios
-        .get(`${API_PATH ? API_PATH : ""}/search?q=${search}`)
+        .get(`${import.meta.env.VITE_API_PATH || ""}/search?q=${search}`)
         .then((res) => {
           if (res.status === 200) setSearchResult(res.data);
           else
@@ -54,7 +53,7 @@ export default function AddShowModal({
           onSubmit={(e) => {
             e.preventDefault();
             axios
-              .post(`${import.meta.env.VITE_API_PATH}/show`, {
+              .post(`${import.meta.env.VITE_API_PATH || ""}/show`, {
                 _id,
                 name,
                 overview,
