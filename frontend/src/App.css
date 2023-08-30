@@ -167,26 +167,21 @@ textarea:focus {
   border-color: #999;
 }
 
-.modalBG {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.205);
-  position: fixed;
-  top: 0;
-  left: 0;
+.modal-background {
+  background-color: #00000080;
   display: none;
-  z-index: 2;
+  position: fixed;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
 }
 
 .modal {
   background: #212121;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 5px;
-  position: fixed;
   width: 80%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .modal textarea,
@@ -206,7 +201,7 @@ textarea:focus {
 }
 
 .show-modal {
-  display: block;
+  display: flex;
 }
 
 .shows {
@@ -251,7 +246,6 @@ textarea:focus {
   background-color: #161616;
   position: absolute;
   width: 100%;
-  z-index: 1;
   max-height: 300px;
   overflow: scroll;
 }

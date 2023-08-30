@@ -2,6 +2,7 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import Modal from "./Modal";
 
 export default function AddShowModal({
   modalOpened,
@@ -30,6 +31,29 @@ export default function AddShowModal({
     setPosterURL("");
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`${import.meta.env.VITE_API_PATH || ""}/show`, {
+        _id,
+        name,
+        overview,
+        posterURL,
+      })
+      .then((res) => {
+        if (res.status === 201) setShows([res.data, ...shows]);
+      })
+      .catch((err) => {
+        console.error(err.response.status);
+        if (err.response.status === 409)
+          alert("the show you're trying to add already exists in your list.");
+      })
+      .finally(() => {
+        setModalOpened(false);
+        resetstates();
+      });
+  };
+
   useEffect(() => {
     if (search.length === 0) setSearchResult([]);
     else {
@@ -46,106 +70,78 @@ export default function AddShowModal({
   }, [search]);
 
   return (
-    <div className={`modalBG ${modalOpened ? "show-modal" : ""}`}>
-      <div className="modal">
-        <form
-          className="showModal-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            axios
-              .post(`${import.meta.env.VITE_API_PATH || ""}/show`, {
-                _id,
-                name,
-                overview,
-                posterURL,
-              })
-              .then((res) => {
-                if (res.status === 201) setShows([res.data, ...shows]);
-              })
-              .catch((err) => {
-                console.error(err.response.status);
-                if (err.response.status === 409)
-                  alert(
-                    "the show you're trying to add already exists in your list."
-                  );
-              })
-              .finally(() => {
-                setModalOpened(false);
-                resetstates();
-              });
-          }}
-        >
-          <div className="input-group">
-            <label htmlFor="searchShow">search the show you want to add</label>
-            <input
-              type="text"
-              onChange={(e) => handleSearchInput(e.target.value)}
-            />
-            <div className="searchResult">
-              {searchResult &&
-                searchResult.map((sr, i) => (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      set_id(sr._id);
-                      setName(sr.name);
-                      setOverview(sr.overview);
-                      setPosterURL(
-                        `https://image.tmdb.org/t/p/w500${sr.posterURL}`
-                      );
-                      setSearch("");
-                    }}
-                  >
-                    <p>{sr.name}</p>
-                    <p>{sr.overview.slice(0, 25)}...</p>
-                  </div>
-                ))}
-            </div>
+    <Modal className={`${modalOpened ? "show-modal" : ""}`}>
+      <form className="showModal-form" onSubmit={handleSubmit}>
+        <div className="input-group">
+          <label htmlFor="searchShow">search the show you want to add</label>
+          <input
+            type="text"
+            onChange={(e) => handleSearchInput(e.target.value)}
+          />
+          <div className="searchResult">
+            {searchResult &&
+              searchResult.map((sr, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    set_id(sr._id);
+                    setName(sr.name);
+                    setOverview(sr.overview);
+                    setPosterURL(
+                      `https://image.tmdb.org/t/p/w500${sr.posterURL}`
+                    );
+                    setSearch("");
+                  }}
+                >
+                  <p>{sr.name}</p>
+                  <p>{sr.overview.slice(0, 25)}...</p>
+                </div>
+              ))}
           </div>
+        </div>
 
-          <div className="input-group">
-            <label htmlFor="name">name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={name}
-              required
-              readOnly
-            />
-          </div>
+        <div className="input-group">
+          <label htmlFor="name">name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={name}
+            required
+            readOnly
+          />
+        </div>
 
-          <div className="input-group">
-            <label htmlFor="overview">overview</label>
-            <textarea
-              id="overview"
-              name="overview"
-              rows="3"
-              value={overview}
-              required
-              readOnly
-            />
-          </div>
+        <div className="input-group">
+          <label htmlFor="overview">overview</label>
+          <textarea
+            id="overview"
+            name="overview"
+            rows="3"
+            value={overview}
+            required
+            readOnly
+          />
+        </div>
 
-          <div className="input-group">
-            <label htmlFor="posterURL">poster URL</label>
-            <input
-              id="posterURL"
-              name="posterURL"
-              type="text"
-              value={posterURL}
-              required
-              readOnly
-            />
-          </div>
+        <div className="input-group">
+          <label htmlFor="posterURL">poster URL</label>
+          <input
+            id="posterURL"
+            name="posterURL"
+            type="text"
+            value={posterURL}
+            required
+            readOnly
+          />
+        </div>
 
-          <div className="button-group">
-            <button onClick={() => setModalOpened(false)}>cancel</button>
-            <button type="submit">Add</button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="button-group">
+          <button onClick={() => setModalOpened(false)}>cancel</button>
+          <button type="submit">Add</button>
+        </div>
+      </form>
+    </Modal>
   );
 }
 
