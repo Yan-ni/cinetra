@@ -70,7 +70,7 @@ export default function AddShowModal({
   }, [search]);
 
   return (
-    <Modal className={`${modalOpened ? "show-modal" : ""}`}>
+    <Modal className={`${modalOpened ? "flex" : ""}`}>
       <form className="showModal-form" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="searchShow">search the show you want to add</label>

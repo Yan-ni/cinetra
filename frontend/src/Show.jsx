@@ -1,11 +1,8 @@
 import PropTypes from "prop-types";
 
-// import axios from "axios";
-// import { useState } from "react";
-
-export default function Show({ name, posterURL }) {
+export default function Show({ _id, name, posterURL, setSelectedShow }) {
   return (
-    <div className="show">
+    <div className="show" onClick={() => setSelectedShow(_id)}>
       <img src={posterURL} alt="show image" />
       <h2>{name}</h2>
     </div>
@@ -13,12 +10,8 @@ export default function Show({ name, posterURL }) {
 }
 
 Show.propTypes = {
-  id: PropTypes.string.isRequired,
+  _id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  overview: PropTypes.string.isRequired,
   posterURL: PropTypes.string.isRequired,
-  seasonsWatched: PropTypes.number.isRequired,
-  episodesWatched: PropTypes.number.isRequired,
-  shows: PropTypes.array.isRequired,
-  setShows: PropTypes.func.isRequired,
+  setSelectedShow: PropTypes.func.isRequired,
 };

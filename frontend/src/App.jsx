@@ -3,12 +3,14 @@ import "./App.css";
 import AddShowModal from "./AddShowModal";
 import { useState, useEffect } from "react";
 import Show from "./Show";
+import ShowModal from "./ShowModal";
 
 import axios from "axios";
 
 function App() {
   const [modalOpened, setModalOpened] = useState(false);
   const [shows, setShows] = useState([]);
+  const [selectedShow, setSelectedShow] = useState(null);
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_PATH || ""}/show`).then((res) => {
@@ -30,19 +32,16 @@ function App() {
 
       <div className="shows">
         {shows?.map((show) => (
-          <Show
-            key={show._id}
-            id={show._id}
-            name={show.name}
-            overview={show.overview}
-            posterURL={show.posterURL}
-            seasonsWatched={show.seasonsWatched}
-            episodesWatched={show.episodesWatched}
-            shows={shows}
-            setShows={setShows}
-          />
+          <Show key={show._id} {...show} setSelectedShow={setSelectedShow} />
         ))}
       </div>
+
+      <ShowModal
+        selectedShow={selectedShow}
+        setSelectedShow={setSelectedShow}
+        shows={shows}
+        setShows={setShows}
+      />
     </div>
   );
 }
