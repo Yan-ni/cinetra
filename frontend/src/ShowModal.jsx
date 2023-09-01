@@ -27,7 +27,7 @@ export default function ShowModal({
     }
 
     axios
-      .put(`${import.meta.env.VITE_API_PATH}/show/${selectedShow}`, data)
+      .put(`${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`, data)
       .then((res) => {
         if (res.status === 200) {
           if (data.seasonsWatched) setSeasons(data.seasonsWatched);
@@ -40,7 +40,7 @@ export default function ShowModal({
     if (!selectedShow) return;
 
     axios
-      .get(`${import.meta.env.VITE_API_PATH}/show/${selectedShow}`)
+      .get(`${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`)
       .then((res) => {
         setShow(res.data);
         setSeasons(res.data.seasonsWatched);
@@ -63,7 +63,9 @@ export default function ShowModal({
         onClick={() => {
           if (window.confirm("are you sure you want to delete this show ?")) {
             axios
-              .delete(`${import.meta.env.VITE_API_PATH}/show/${selectedShow}`)
+              .delete(
+                `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`
+              )
               .then((res) => {
                 if (res.status === 200) {
                   setShows(shows.filter((show) => show._id !== selectedShow));
