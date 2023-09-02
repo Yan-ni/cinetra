@@ -2,21 +2,23 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import Modal from "./Modal";
+import Modal from "../components/Modal";
 
 export default function AddShowModal({
-  modalOpened,
-  setModalOpened,
+  modalStatus,
+  setModalStatus,
   shows,
   setShows,
 }) {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
-  const [_id, set_id] = useState("");
-  const [name, setName] = useState("");
-  const [overview, setOverview] = useState("");
-  const [posterURL, setPosterURL] = useState("");
+  const [show, setShow] = useState({
+    _id: "",
+    name: "",
+    overview: "",
+    posterURL: "",
+  });
 
   const handleSearchInput = debounce((value) => {
     setSearch(value);
@@ -25,21 +27,23 @@ export default function AddShowModal({
   const resetstates = () => {
     setSearch("");
     setSearchResult("");
-    set_id("");
-    setName("");
-    setOverview("");
-    setPosterURL("");
+    setShow({
+      _id: "",
+      name: "",
+      overview: "",
+      posterURL: "",
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!show.name || !show.overview || !show.posterURL) {
+      setModalStatus(false);
+      return;
+    }
+
     axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/show`, {
-        _id,
-        name,
-        overview,
-        posterURL,
-      })
+      .post(`${import.meta.env.VITE_API_PATH || ""}/show`, show)
       .then((res) => {
         if (res.status === 201) setShows([res.data, ...shows]);
       })
@@ -49,7 +53,7 @@ export default function AddShowModal({
           alert("the show you're trying to add already exists in your list.");
       })
       .finally(() => {
-        setModalOpened(false);
+        setModalStatus(false);
         resetstates();
       });
   };
@@ -70,7 +74,7 @@ export default function AddShowModal({
   }, [search]);
 
   return (
-    <Modal className={`${modalOpened ? "flex" : ""}`}>
+    <Modal className={`${modalStatus ? "flex" : ""}`}>
       <form className="showModal-form" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="searchShow">search the show you want to add</label>
@@ -80,21 +84,21 @@ export default function AddShowModal({
           />
           <div className="searchResult">
             {searchResult &&
-              searchResult.map((sr, i) => (
+              searchResult.map(({ _id, name, overview, posterURL }, index) => (
                 <div
-                  key={i}
+                  key={index}
                   onClick={() => {
-                    set_id(sr._id);
-                    setName(sr.name);
-                    setOverview(sr.overview);
-                    setPosterURL(
-                      `https://image.tmdb.org/t/p/w500${sr.posterURL}`
-                    );
+                    setShow({
+                      _id,
+                      name,
+                      overview,
+                      posterURL,
+                    });
                     setSearch("");
                   }}
                 >
-                  <p>{sr.name}</p>
-                  <p>{sr.overview.slice(0, 25)}...</p>
+                  <p>{name}</p>
+                  <p>{overview.slice(0, 25)}...</p>
                 </div>
               ))}
           </div>
@@ -106,7 +110,7 @@ export default function AddShowModal({
             id="name"
             name="name"
             type="text"
-            value={name}
+            value={show.name}
             required
             readOnly
           />
@@ -118,7 +122,7 @@ export default function AddShowModal({
             id="overview"
             name="overview"
             rows="3"
-            value={overview}
+            value={show.overview}
             required
             readOnly
           />
@@ -130,14 +134,16 @@ export default function AddShowModal({
             id="posterURL"
             name="posterURL"
             type="text"
-            value={posterURL}
+            value={show.posterURL}
             required
             readOnly
           />
         </div>
 
         <div className="button-group">
-          <button onClick={() => setModalOpened(false)}>cancel</button>
+          <button type="button" onClick={() => setModalStatus(false)}>
+            cancel
+          </button>
           <button type="submit">Add</button>
         </div>
       </form>
@@ -146,8 +152,8 @@ export default function AddShowModal({
 }
 
 AddShowModal.propTypes = {
-  modalOpened: PropTypes.bool.isRequired,
-  setModalOpened: PropTypes.func.isRequired,
+  modalStatus: PropTypes.bool.isRequired,
+  setModalStatus: PropTypes.func.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
 };

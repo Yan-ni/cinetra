@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
+import Modal from "../components/Modal";
 import PropTypes from "prop-types";
 import axios from "axios";
 
 export default function ShowModal({
   selectedShow,
-  setSelectedShow,
+  closeModal,
   shows,
   setShows,
 }) {
   const [show, setShow] = useState({});
+  // TODO : use only one state for show
   const [seasons, setSeasons] = useState(0);
   const [episodes, setEpisodes] = useState(0);
-
-  const closeModal = () => {
-    setSelectedShow(null);
-  };
 
   const update = async (op, type) => {
     const data = {};
@@ -39,14 +36,22 @@ export default function ShowModal({
   useEffect(() => {
     if (!selectedShow) return;
 
-    axios
-      .get(`${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`)
-      .then((res) => {
-        setShow(res.data);
-        setSeasons(res.data.seasonsWatched);
-        setEpisodes(res.data.episodesWatched);
-      })
-      .catch((err) => console.error(err));
+    const loadShow = async () => {
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`
+        );
+
+        setShow(result.data);
+        setSeasons(result.data.seasonsWatched);
+        setEpisodes(result.data.episodesWatched);
+      } catch (error) {
+        console.error("error occured loading the show");
+        if (import.meta.env.DEV) console.error(error);
+      }
+    };
+
+    loadShow();
   }, [selectedShow]);
 
   return (
@@ -69,7 +74,7 @@ export default function ShowModal({
               .then((res) => {
                 if (res.status === 200) {
                   setShows(shows.filter((show) => show._id !== selectedShow));
-                  setSelectedShow(null);
+                  closeModal(null);
                 }
               });
           }
@@ -106,7 +111,7 @@ export default function ShowModal({
 
 ShowModal.propTypes = {
   selectedShow: PropTypes.number,
-  setSelectedShow: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
 };

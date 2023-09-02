@@ -1,31 +1,45 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./App.css";
 
-import AddShowModal from "./AddShowModal";
-import { useState, useEffect } from "react";
-import Show from "./Show";
-import ShowModal from "./ShowModal";
+// components
+import Show from "./components/Show";
 
-import axios from "axios";
+// modals
+import ShowModal from "./modals/ShowModal";
+import AddShowModal from "./modals/AddShowModal";
 
 function App() {
-  const [modalOpened, setModalOpened] = useState(false);
+  const [addShowModalStatus, setAddShowModalStatus] = useState(false);
   const [shows, setShows] = useState([]);
   const [selectedShow, setSelectedShow] = useState(null);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_PATH || ""}/show`).then((res) => {
-      if (res.status === 200 && Array.isArray(res.data)) setShows(res.data);
-    });
+    const loadShows = async () => {
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_API_PATH || ""}/show`
+        );
+
+        if (result.status === 200 && Array.isArray(result.data))
+          setShows(result.data);
+      } catch (error) {
+        console.error("error occured loading shows");
+        if (import.meta.env.DEV) console.error(error);
+      }
+    };
+
+    loadShows();
   }, []);
 
   return (
     <div className="app">
       <h1>Show List</h1>
 
-      <button onClick={() => setModalOpened(true)}>Add a show</button>
+      <button onClick={() => setAddShowModalStatus(true)}>Add a show</button>
       <AddShowModal
-        modalOpened={modalOpened}
-        setModalOpened={(param) => setModalOpened(param)}
+        modalStatus={addShowModalStatus}
+        setModalStatus={setAddShowModalStatus}
         shows={shows}
         setShows={setShows}
       />
@@ -38,7 +52,7 @@ function App() {
 
       <ShowModal
         selectedShow={selectedShow}
-        setSelectedShow={setSelectedShow}
+        closeModal={() => setSelectedShow(null)}
         shows={shows}
         setShows={setShows}
       />
