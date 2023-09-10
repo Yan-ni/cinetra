@@ -13,6 +13,7 @@ function App() {
   const [addShowModalStatus, setAddShowModalStatus] = useState(false);
   const [shows, setShows] = useState([]);
   const [selectedShow, setSelectedShow] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const loadShows = async () => {
@@ -36,6 +37,14 @@ function App() {
     <div className="app">
       <h1>Show List</h1>
 
+      <input
+        type="text"
+        name="search"
+        placeholder="search for a show in your list"
+        value={search}
+        onChange={(e) => setSearch(e.target.value.toLowerCase())}
+      />
+
       <button onClick={() => setAddShowModalStatus(true)}>Add a show</button>
       <AddShowModal
         modalStatus={addShowModalStatus}
@@ -45,9 +54,11 @@ function App() {
       />
 
       <div className="shows">
-        {shows?.map((show) => (
-          <Show key={show._id} {...show} setSelectedShow={setSelectedShow} />
-        ))}
+        {shows
+          ?.filter((show) => show.name.toLowerCase().includes(search))
+          .map((show) => (
+            <Show key={show._id} {...show} setSelectedShow={setSelectedShow} />
+          ))}
       </div>
 
       <ShowModal

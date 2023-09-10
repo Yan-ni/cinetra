@@ -101,6 +101,12 @@ body {
   text-align: center;
 }
 
+.app > input[name="search"] {
+  margin-bottom: 1rem;
+  display: block;
+  margin-inline: auto;
+}
+
 h1 {
   margin-block: 1rem;
 }
