@@ -26,6 +26,10 @@ const showSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

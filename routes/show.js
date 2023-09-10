@@ -15,6 +15,24 @@ router.get("/show/:id?", async (req, res) => {
   }
 });
 
+router.get("/show/:id/complete", async (req, res) => {
+  const showId = req.params.id;
+
+  try {
+    const show = await Show.findOne({ _id: showId });
+
+    if (!show) return res.sendStatus(204);
+
+    show.completed = !show.completed;
+
+    await show.save();
+
+    res.json(show);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
 router.post("/show", async (req, res) => {
   try {
     const exists = await Show.findById(req.body?._id);
@@ -35,6 +53,7 @@ router.put("/show/:id", async (req, res) => {
   const showId = req.params.id;
   const { body } = req;
 
+  // TODO: add a try catch
   if (showId && body) {
     const show = await Show.findOne({ _id: showId });
 

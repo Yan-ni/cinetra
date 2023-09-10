@@ -33,6 +33,21 @@ export default function ShowModal({
       });
   };
 
+  const toggleComplete = async () => {
+    try {
+      await axios.get(
+        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}/complete`
+      );
+      setShow({
+        ...show,
+        completed: !show.completed,
+      });
+    } catch (error) {
+      console.error("something went wrong when setting the show as complete.");
+      if (import.meta.env.DEV) console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (!selectedShow) return;
 
@@ -83,22 +98,34 @@ export default function ShowModal({
         Delete
       </button>
 
+      <button className="completeShow" onClick={toggleComplete}>
+        Mark as Complete
+      </button>
+
       <div className="show-controls">
         <div className="show-control">
           <h3>Seasons watched</h3>
           <div className="button-group">
-            <button onClick={() => update("DEC", "SE")}>-</button>
+            {!show.completed && (
+              <button onClick={() => update("DEC", "SE")}>-</button>
+            )}
             <p>{seasons}</p>
-            <button onClick={() => update("INC", "SE")}>+</button>
+            {!show.completed && (
+              <button onClick={() => update("INC", "SE")}>+</button>
+            )}
           </div>
         </div>
 
         <div className="show-control">
           <h3>Episodes watched</h3>
           <div className="button-group">
-            <button onClick={() => update("DEC", "EP")}>-</button>
+            {!show.completed && (
+              <button onClick={() => update("DEC", "EP")}>-</button>
+            )}
             <p>{episodes}</p>
-            <button onClick={() => update("INC", "EP")}>+</button>
+            {!show.completed && (
+              <button onClick={() => update("INC", "EP")}>+</button>
+            )}
           </div>
         </div>
       </div>
