@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -13,6 +14,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("combined"));
 
 // setup routes
 const searchRoute = require("./routes/search");
