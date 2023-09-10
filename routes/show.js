@@ -3,15 +3,17 @@ const Show = require("../models/Show");
 
 router.get("/show/:id?", async (req, res) => {
   const showId = req.params.id;
-
-  if (showId) {
-    const show = await Show.findById(showId);
-
-    res.json(show);
-  } else {
-    const shows = await Show.find().sort({ updatedAt: -1 });
-
-    res.json(shows);
+  try {
+    if (showId) {
+      const show = await Show.findById(showId);
+      res.json(show);
+    } else {
+      const shows = await Show.find().sort({ updatedAt: -1 });
+      res.json(shows);
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
 });
 
@@ -29,6 +31,7 @@ router.get("/show/:id/complete", async (req, res) => {
 
     res.json(show);
   } catch (error) {
+    console.error(error);
     res.sendStatus(500);
   }
 });
@@ -44,8 +47,9 @@ router.post("/show", async (req, res) => {
 
       res.status(201).json(show);
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
 });
 
@@ -53,8 +57,9 @@ router.put("/show/:id", async (req, res) => {
   const showId = req.params.id;
   const { body } = req;
 
-  // TODO: add a try catch
-  if (showId && body) {
+  if (!showId || !body) res.sendStatus(204);
+
+  try {
     const show = await Show.findOne({ _id: showId });
 
     if (!show) return res.sendStatus(204);
@@ -67,17 +72,23 @@ router.put("/show/:id", async (req, res) => {
 
     await show.save();
     res.json(show);
-  } else {
-    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
 });
 
 router.delete("/show/:id", async (req, res) => {
   const showId = req.params.id;
 
-  if (showId) {
+  if (!showId) res.sendStatus(400);
+
+  try {
     await Show.deleteOne({ _id: showId });
     res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
 });
 
