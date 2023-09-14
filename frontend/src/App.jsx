@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./App.css";
+import "./assets/css/App.css";
 
 // components
 import Show from "./components/Show";
@@ -35,7 +35,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Show List</h1>
+      <h1 className="text-align-center">Show List</h1>
 
       <input
         type="text"
@@ -45,7 +45,12 @@ function App() {
         onChange={(e) => setSearch(e.target.value.toLowerCase())}
       />
 
-      <button onClick={() => setAddShowModalStatus(true)}>Add a show</button>
+      <button
+        className="btn-primary"
+        onClick={() => setAddShowModalStatus(true)}
+      >
+        Add a show
+      </button>
       <AddShowModal
         modalStatus={addShowModalStatus}
         setModalStatus={setAddShowModalStatus}
@@ -53,7 +58,7 @@ function App() {
         setShows={setShows}
       />
 
-      <div className="shows">
+      <div className="shows gap-1 mt-1">
         {shows
           ?.filter((show) => show.name.toLowerCase().includes(search))
           .map((show) => (

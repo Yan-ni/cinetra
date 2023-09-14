@@ -79,7 +79,7 @@ export default function ShowModal({
       <p className="overview">{show.overview}</p>
 
       <button
-        className="deleteShow"
+        className="btn-danger my-1"
         onClick={() => {
           if (window.confirm("are you sure you want to delete this show ?")) {
             axios
@@ -98,38 +98,61 @@ export default function ShowModal({
         Delete
       </button>
 
-      <button className="completeShow" onClick={toggleComplete}>
-        Mark as Complete
+      <button
+        className={show.completed ? "btn-success" : "btn-primary"}
+        onClick={toggleComplete}
+      >
+        {show.completed ? "Show completed !" : "Mark as Complete"}
       </button>
 
-      <div className="show-controls">
-        <div className="show-control">
-          <h3>Seasons watched</h3>
-          <div className="button-group">
+      <div className="flex justify-content-space-between">
+        <div className="flex flex-column">
+          <h3 className="text-align-center">Seasons watched</h3>
+          <div className="button-group align-self-center flex align-items-center gap-2">
             {!show.completed && (
-              <button onClick={() => update("DEC", "SE")}>-</button>
+              <button
+                className="btn-primary"
+                onClick={() => update("DEC", "SE")}
+              >
+                -
+              </button>
             )}
             <p>{seasons}</p>
             {!show.completed && (
-              <button onClick={() => update("INC", "SE")}>+</button>
+              <button
+                className="btn-primary"
+                onClick={() => update("INC", "SE")}
+              >
+                +
+              </button>
             )}
           </div>
         </div>
 
-        <div className="show-control">
-          <h3>Episodes watched</h3>
-          <div className="button-group">
+        <div className="flex flex-column">
+          <h3 className="text-align-center">Episodes watched</h3>
+          <div className="button-group align-self-center flex align-items-center gap-2">
             {!show.completed && (
-              <button onClick={() => update("DEC", "EP")}>-</button>
+              <button
+                className="btn-primary"
+                onClick={() => update("DEC", "EP")}
+              >
+                -
+              </button>
             )}
             <p>{episodes}</p>
             {!show.completed && (
-              <button onClick={() => update("INC", "EP")}>+</button>
+              <button
+                className="btn-primary"
+                onClick={() => update("INC", "EP")}
+              >
+                +
+              </button>
             )}
           </div>
         </div>
       </div>
-      <button onClick={closeModal} className="close">
+      <button className="btn-primary align-self-end mt-2" onClick={closeModal}>
         close
       </button>
     </Modal>

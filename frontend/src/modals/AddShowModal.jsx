@@ -141,10 +141,16 @@ export default function AddShowModal({
         </div>
 
         <div className="button-group">
-          <button type="button" onClick={() => setModalStatus(false)}>
+          <button
+            className="btn-secondary"
+            type="button"
+            onClick={() => setModalStatus(false)}
+          >
             cancel
           </button>
-          <button type="submit">Add</button>
+          <button className="btn-primary" type="submit">
+            Add
+          </button>
         </div>
       </form>
     </Modal>
