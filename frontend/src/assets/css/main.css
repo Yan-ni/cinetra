@@ -107,6 +107,9 @@ h3 {
 }
 
 /************** Utility **************/
+.inline {
+  display: inline;
+}
 .inline-block {
   display: inline-block;
 }
@@ -169,6 +172,10 @@ h3 {
 
 .w-fit-content {
   width: fit-content;
+}
+
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
 }
 
 /************** Button **************/

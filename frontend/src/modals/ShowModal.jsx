@@ -10,6 +10,7 @@ export default function ShowModal({
   setShows,
 }) {
   const [show, setShow] = useState({});
+  const [overviewCollaplsed, setOverviewCollapsed] = useState(true);
 
   const update = async (op, type) => {
     const data = {};
@@ -83,7 +84,20 @@ export default function ShowModal({
       </div>
 
       <h2>{show.name}</h2>
-      <p className="overview">{show.overview}</p>
+      <p
+        className={`overview ${overviewCollaplsed ? "line-clamp-2" : "inline"}`}
+      >
+        {show.overview}{" "}
+      </p>
+      <a
+        href=""
+        onClick={(e) => {
+          e.preventDefault();
+          setOverviewCollapsed(!overviewCollaplsed);
+        }}
+      >
+        read {overviewCollaplsed ? "more" : "less"}
+      </a>
 
       <button
         className="btn-danger my-1 w-100"
@@ -159,7 +173,13 @@ export default function ShowModal({
           </div>
         </div>
       </div>
-      <button className="btn-primary mt-2 ml-auto" onClick={closeModal}>
+      <button
+        className="btn-primary mt-2 ml-auto"
+        onClick={() => {
+          setOverviewCollapsed(true);
+          closeModal();
+        }}
+      >
         close
       </button>
     </Modal>

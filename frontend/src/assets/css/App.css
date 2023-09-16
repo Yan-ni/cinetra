@@ -46,6 +46,22 @@
   width: 100%;
 }
 
+.overview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overview + a {
+  display: inline;
+  color: #5eb4ff;
+}
+
+.overview + a:visited {
+  color: #5eb4ff;
+}
+
 /************** Shows **************/
 .shows {
   display: grid;
