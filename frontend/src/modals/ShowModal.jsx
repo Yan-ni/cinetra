@@ -10,27 +10,36 @@ export default function ShowModal({
   setShows,
 }) {
   const [show, setShow] = useState({});
-  // TODO : use only one state for show
-  const [seasons, setSeasons] = useState(0);
-  const [episodes, setEpisodes] = useState(0);
 
   const update = async (op, type) => {
     const data = {};
 
     if (type === "SE") {
-      data.seasonsWatched = seasons + (op === "DEC" ? -1 : 1);
+      data.seasonsWatched = show.seasonsWatched + (op === "DEC" ? -1 : 1);
     } else {
-      data.episodesWatched = episodes + (op === "DEC" ? -1 : 1);
+      data.episodesWatched = show.episodesWatched + (op === "DEC" ? -1 : 1);
     }
 
-    axios
-      .put(`${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`, data)
-      .then((res) => {
-        if (res.status === 200) {
-          if (data.seasonsWatched) setSeasons(data.seasonsWatched);
-          else if (data.episodesWatched) setEpisodes(data.episodesWatched);
-        }
-      });
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`,
+        data
+      );
+      if (res.status === 200) {
+        if (data.seasonsWatched !== undefined)
+          setShow((prev) => ({ ...prev, seasonsWatched: data.seasonsWatched }));
+        else if (data.episodesWatched !== undefined)
+          setShow((prev) => ({
+            ...prev,
+            episodesWatched: data.episodesWatched,
+          }));
+      }
+    } catch (error) {
+      console.error(
+        "error occured when updating show's seasons count or episodes count"
+      );
+      if (import.meta.env.DEV) console.error(error);
+    }
   };
 
   const toggleComplete = async () => {
@@ -58,8 +67,6 @@ export default function ShowModal({
         );
 
         setShow(result.data);
-        setSeasons(result.data.seasonsWatched);
-        setEpisodes(result.data.episodesWatched);
       } catch (error) {
         console.error("error occured loading the show");
         if (import.meta.env.DEV) console.error(error);
@@ -117,7 +124,7 @@ export default function ShowModal({
                 -
               </button>
             )}
-            <p>{seasons}</p>
+            <p>{show.seasonsWatched}</p>
             {!show.completed && (
               <button
                 className="btn-primary"
@@ -140,7 +147,7 @@ export default function ShowModal({
                 -
               </button>
             )}
-            <p>{episodes}</p>
+            <p>{show.episodesWatched}</p>
             {!show.completed && (
               <button
                 className="btn-primary"
