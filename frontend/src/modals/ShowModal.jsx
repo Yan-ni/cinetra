@@ -78,7 +78,7 @@ export default function ShowModal({
 
   return (
     <Modal className={`${selectedShow ? "flex show-modal" : "show-modal"}`}>
-      <div className="show-img">
+      <div className="show-img w-100">
         <img src={show.posterURL} alt="show image" />
       </div>
 
@@ -86,7 +86,7 @@ export default function ShowModal({
       <p className="overview">{show.overview}</p>
 
       <button
-        className="btn-danger my-1"
+        className="btn-danger my-1 w-100"
         onClick={() => {
           if (window.confirm("are you sure you want to delete this show ?")) {
             axios
@@ -106,7 +106,7 @@ export default function ShowModal({
       </button>
 
       <button
-        className={show.completed ? "btn-success" : "btn-primary"}
+        className={`w-100 ${show.completed ? "btn-success" : "btn-primary"}`}
         onClick={toggleComplete}
       >
         {show.completed ? "Show completed !" : "Mark as Complete"}
@@ -159,7 +159,7 @@ export default function ShowModal({
           </div>
         </div>
       </div>
-      <button className="btn-primary align-self-end mt-2" onClick={closeModal}>
+      <button className="btn-primary mt-2 ml-auto" onClick={closeModal}>
         close
       </button>
     </Modal>

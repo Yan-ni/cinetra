@@ -75,7 +75,7 @@ export default function AddShowModal({
 
   return (
     <Modal className={`${modalStatus ? "flex" : ""}`}>
-      <form className="showModal-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="searchShow">search the show you want to add</label>
           <input
@@ -140,15 +140,15 @@ export default function AddShowModal({
           />
         </div>
 
-        <div className="button-group">
+        <div className="ml-auto w-fit-content">
           <button
-            className="btn-secondary"
+            className="btn-secondary inline-block"
             type="button"
             onClick={() => setModalStatus(false)}
           >
             cancel
           </button>
-          <button className="btn-primary" type="submit">
+          <button className="btn-primary inline-block ml-1" type="submit">
             Add
           </button>
         </div>

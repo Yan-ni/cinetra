@@ -107,6 +107,10 @@ h3 {
 }
 
 /************** Utility **************/
+.inline-block {
+  display: inline-block;
+}
+
 .flex {
   display: flex;
 }
@@ -147,8 +151,24 @@ h3 {
   margin-top: 1.5rem;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
+.ml-1 {
+  margin-left: 0.5rem;
+}
+
 .my-1 {
   margin-block: 1rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.w-fit-content {
+  width: fit-content;
 }
 
 /************** Button **************/

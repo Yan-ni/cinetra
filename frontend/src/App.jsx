@@ -58,7 +58,7 @@ function App() {
         setShows={setShows}
       />
 
-      <div className="shows gap-1 mt-1">
+      <div className="shows w-100 gap-1 mt-1">
         {shows
           ?.filter((show) => show.name.toLowerCase().includes(search))
           .map((show) => (

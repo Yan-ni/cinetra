@@ -46,20 +46,8 @@
   width: 100%;
 }
 
-.showModal-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.showModal-form .button-group {
-  align-self: flex-end;
-  display: flex;
-  gap: 1rem;
-}
-
 /************** Shows **************/
 .shows {
-  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
 }
@@ -117,15 +105,6 @@
 
 .searchResult > div:hover {
   background-color: #202020;
-}
-
-.show-modal > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.show-img {
-  width: 100%;
 }
 
 .show-img img {
