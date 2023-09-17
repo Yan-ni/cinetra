@@ -70,6 +70,8 @@ router.put("/show/:id", async (req, res) => {
     if (Number.isInteger(body.episodesWatched))
       show.episodesWatched = body.episodesWatched;
 
+    if (typeof body.favorite === "boolean") show.favorite = body.favorite;
+
     await show.save();
     res.json(show);
   } catch (error) {

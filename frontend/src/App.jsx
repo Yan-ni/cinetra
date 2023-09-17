@@ -15,6 +15,26 @@ function App() {
   const [selectedShow, setSelectedShow] = useState(null);
   const [search, setSearch] = useState("");
 
+  const toggleFavorite = async (_id, favorite) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/show/${_id}`, {
+        favorite: !favorite,
+      });
+
+      // TODO: check response status
+      setShows(
+        shows.map((show) => {
+          if (show._id !== _id) return show;
+
+          return { ...show, favorite: !favorite };
+        })
+      );
+    } catch (error) {
+      console.error("error occured while toggling show favorite button");
+      if (import.meta.env.DEV) console.error(error);
+    }
+  };
+
   useEffect(() => {
     const loadShows = async () => {
       try {
@@ -62,7 +82,12 @@ function App() {
         {shows
           ?.filter((show) => show.name.toLowerCase().includes(search))
           .map((show) => (
-            <Show key={show._id} {...show} setSelectedShow={setSelectedShow} />
+            <Show
+              key={show._id}
+              {...show}
+              toggleFavorite={toggleFavorite}
+              setSelectedShow={setSelectedShow}
+            />
           ))}
       </div>
 
