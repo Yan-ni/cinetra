@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import PropTypes from "prop-types";
 import axios from "axios";
+import ShowControl from "../components/ShowControl";
 
 export default function ShowModal({
   selectedShow,
@@ -12,13 +13,15 @@ export default function ShowModal({
   const [show, setShow] = useState({});
   const [overviewCollaplsed, setOverviewCollapsed] = useState(true);
 
-  const update = async (op, type) => {
+  const update = async (e) => {
     const data = {};
+    const op = e.target.textContent;
+    const type = e.target.name;
 
-    if (type === "SE") {
-      data.seasonsWatched = show.seasonsWatched + (op === "DEC" ? -1 : 1);
+    if (type === "seasons") {
+      data.seasonsWatched = show.seasonsWatched + (op === "-" ? -1 : 1);
     } else {
-      data.episodesWatched = show.episodesWatched + (op === "DEC" ? -1 : 1);
+      data.episodesWatched = show.episodesWatched + (op === "-" ? -1 : 1);
     }
 
     try {
@@ -130,51 +133,22 @@ export default function ShowModal({
       </button>
 
       <div className="flex justify-content-space-between">
-        <div className="flex flex-column">
-          <h3 className="text-align-center">Seasons watched</h3>
-          <div className="button-group align-self-center flex align-items-center gap-2">
-            {!show.completed && (
-              <button
-                className="btn-primary"
-                onClick={() => update("DEC", "SE")}
-              >
-                -
-              </button>
-            )}
-            <p>{show.seasonsWatched}</p>
-            {!show.completed && (
-              <button
-                className="btn-primary"
-                onClick={() => update("INC", "SE")}
-              >
-                +
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-column">
-          <h3 className="text-align-center">Episodes watched</h3>
-          <div className="button-group align-self-center flex align-items-center gap-2">
-            {!show.completed && (
-              <button
-                className="btn-primary"
-                onClick={() => update("DEC", "EP")}
-              >
-                -
-              </button>
-            )}
-            <p>{show.episodesWatched}</p>
-            {!show.completed && (
-              <button
-                className="btn-primary"
-                onClick={() => update("INC", "EP")}
-              >
-                +
-              </button>
-            )}
-          </div>
-        </div>
+        <ShowControl
+          name="seasons"
+          count={show.seasonsWatched}
+          active={!show.completed}
+          update={update}
+        >
+          Seasons Watched
+        </ShowControl>
+        <ShowControl
+          name="episodes"
+          count={show.episodesWatched}
+          active={!show.completed}
+          update={update}
+        >
+          Episodes Watched
+        </ShowControl>
       </div>
       <button
         className="btn-primary mt-2 ml-auto"
