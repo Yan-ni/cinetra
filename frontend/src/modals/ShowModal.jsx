@@ -78,7 +78,10 @@ export default function ShowModal({
   }, [selectedShow]);
 
   return (
-    <Modal className={`${selectedShow ? "flex show-modal" : "show-modal"}`}>
+    <Modal
+      className={`${selectedShow ? "flex show-modal" : "show-modal"}`}
+      close={closeModal}
+    >
       <div className="show-img w-100">
         <img src={show.posterURL} alt="show image" />
       </div>
