@@ -45,7 +45,7 @@ router.put("/movie/:id", async (req, res) => {
 
     if (!movie) return res.sendStatus(204);
 
-    movie.favorite = body?.favorite || false;
+    if (typeof body.favorite === "boolean") movie.favorite = body.favorite;
 
     await movie.save();
     res.json(movie);

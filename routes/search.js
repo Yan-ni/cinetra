@@ -44,9 +44,9 @@ router.get("/search/movie", async (req, res) => {
 
     response = await response.json();
 
-    response = response.results.map(({ id, name, overview, poster_path }) => ({
+    response = response.results.map(({ id, title, overview, poster_path }) => ({
       _id: id,
-      name,
+      name: title,
       overview,
       posterURL: `https://image.tmdb.org/t/p/w500${poster_path}`,
     }));
