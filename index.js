@@ -23,6 +23,9 @@ app.use(searchRoute);
 const showRoutes = require("./routes/show");
 app.use(showRoutes);
 
+const movieRoutes = require("./routes/movie");
+app.use(movieRoutes);
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
