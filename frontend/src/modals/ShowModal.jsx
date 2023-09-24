@@ -9,6 +9,7 @@ export default function ShowModal({
   closeModal,
   shows,
   setShows,
+  type,
 }) {
   const [show, setShow] = useState({});
   const [overviewCollaplsed, setOverviewCollapsed] = useState(true);
@@ -67,18 +68,18 @@ export default function ShowModal({
     const loadShow = async () => {
       try {
         const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`
+          `${import.meta.env.VITE_API_PATH || ""}/${type}/${selectedShow}`
         );
 
         setShow(result.data);
       } catch (error) {
-        console.error("error occured loading the show");
+        console.error(`error occured loading the ${type}`);
         if (import.meta.env.DEV) console.error(error);
       }
     };
 
     loadShow();
-  }, [selectedShow]);
+  }, [selectedShow, type]);
 
   return (
     <Modal
@@ -111,7 +112,7 @@ export default function ShowModal({
           if (window.confirm("are you sure you want to delete this show ?")) {
             axios
               .delete(
-                `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`
+                `${import.meta.env.VITE_API_PATH || ""}/${type}/${selectedShow}`
               )
               .then((res) => {
                 if (res.status === 200) {
@@ -125,31 +126,37 @@ export default function ShowModal({
         Delete
       </button>
 
-      <button
-        className={`w-100 ${show.completed ? "btn-success" : "btn-primary"}`}
-        onClick={toggleComplete}
-      >
-        {show.completed ? "Show completed !" : "Mark as Complete"}
-      </button>
+      {type === "show" && (
+        <>
+          <button
+            className={`w-100 ${
+              show.completed ? "btn-success" : "btn-primary"
+            }`}
+            onClick={toggleComplete}
+          >
+            {show.completed ? "Show completed !" : "Mark as Complete"}
+          </button>
+          <div className="flex justify-content-space-between">
+            <ShowControl
+              name="seasons"
+              count={show.seasonsWatched}
+              active={!show.completed}
+              update={update}
+            >
+              Seasons Watched
+            </ShowControl>
+            <ShowControl
+              name="episodes"
+              count={show.episodesWatched}
+              active={!show.completed}
+              update={update}
+            >
+              Episodes Watched
+            </ShowControl>
+          </div>
+        </>
+      )}
 
-      <div className="flex justify-content-space-between">
-        <ShowControl
-          name="seasons"
-          count={show.seasonsWatched}
-          active={!show.completed}
-          update={update}
-        >
-          Seasons Watched
-        </ShowControl>
-        <ShowControl
-          name="episodes"
-          count={show.episodesWatched}
-          active={!show.completed}
-          update={update}
-        >
-          Episodes Watched
-        </ShowControl>
-      </div>
       <button
         className="btn-primary mt-2 ml-auto"
         onClick={() => {
@@ -168,4 +175,5 @@ ShowModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["show", "movie"]).isRequired,
 };

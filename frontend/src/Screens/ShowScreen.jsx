@@ -92,6 +92,7 @@ function ShowScreen() {
       </div>
 
       <ShowModal
+        type="show"
         selectedShow={selectedShow}
         closeModal={() => setSelectedShow(null)}
         shows={shows}

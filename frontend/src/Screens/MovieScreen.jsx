@@ -5,7 +5,7 @@ import axios from "axios";
 import Movie from "../components/Movie";
 
 // modals
-import MovieModal from "../modals/MovieModal";
+import ShowModal from "../modals/ShowModal";
 import AddShowModal from "../modals/AddShowModal";
 
 function ShowScreen() {
@@ -91,11 +91,12 @@ function ShowScreen() {
           ))}
       </div>
 
-      <MovieModal
-        selectedMovie={selectedMovie}
+      <ShowModal
+        type="movie"
+        selectedShow={selectedMovie}
         closeModal={() => setSelectedMovie(null)}
-        movies={movies}
-        setMovies={setMovies}
+        shows={movies}
+        setShows={setMovies}
       />
     </div>
   );
