@@ -85,14 +85,13 @@ export default function ShowModal({
     <Modal
       className={`${selectedShow ? "flex show-modal" : "show-modal"}`}
       close={closeModal}
+      style={{
+        background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${show.posterURL}) center`,
+      }}
     >
-      <div className="show-img w-100">
-        <img src={show.posterURL} alt="show image" />
-      </div>
-
       <h2>{show.name}</h2>
       <p
-        className={`overview ${overviewCollaplsed ? "line-clamp-2" : "inline"}`}
+        className={`overview ${overviewCollaplsed ? "line-clamp-3" : "inline"}`}
       >
         {show.overview}{" "}
       </p>
