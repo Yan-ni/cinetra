@@ -9,6 +9,7 @@ export default function AddShowModal({
   setModalStatus,
   shows,
   setShows,
+  type,
 }) {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -43,14 +44,16 @@ export default function AddShowModal({
     }
 
     axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/show`, show)
+      .post(`${import.meta.env.VITE_API_PATH || ""}/${type}`, show)
       .then((res) => {
         if (res.status === 201) setShows([res.data, ...shows]);
       })
       .catch((err) => {
         console.error(err.response.status);
         if (err.response.status === 409)
-          alert("the show you're trying to add already exists in your list.");
+          alert(
+            `the ${type} you're trying to add already exists in your list.`
+          );
       })
       .finally(() => {
         setModalStatus(false);
@@ -62,7 +65,9 @@ export default function AddShowModal({
     if (search.length === 0) setSearchResult([]);
     else {
       axios
-        .get(`${import.meta.env.VITE_API_PATH || ""}/search/show?q=${search}`)
+        .get(
+          `${import.meta.env.VITE_API_PATH || ""}/search/${type}?q=${search}`
+        )
         .then((res) => {
           if (res.status === 200) setSearchResult(res.data);
           else
@@ -71,7 +76,7 @@ export default function AddShowModal({
             );
         });
     }
-  }, [search]);
+  }, [search, type]);
 
   return (
     <Modal
@@ -80,7 +85,7 @@ export default function AddShowModal({
     >
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="searchShow">search the show you want to add</label>
+          <label htmlFor="searchShow">search the {type} you want to add</label>
           <input
             type="text"
             onChange={(e) => handleSearchInput(e.target.value)}
@@ -168,4 +173,5 @@ AddShowModal.propTypes = {
   setModalStatus: PropTypes.func.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["show", "movie"]).isRequired,
 };

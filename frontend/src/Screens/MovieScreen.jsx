@@ -6,7 +6,7 @@ import Movie from "../components/Movie";
 
 // modals
 import MovieModal from "../modals/MovieModal";
-import AddMovieModal from "../modals/AddMovieModal";
+import AddShowModal from "../modals/AddShowModal";
 
 function ShowScreen() {
   const [addMovieModalStatus, setAddMovieModalStatus] = useState(false);
@@ -70,11 +70,12 @@ function ShowScreen() {
       >
         Add a movie
       </button>
-      <AddMovieModal
+      <AddShowModal
+        type="movie"
         modalStatus={addMovieModalStatus}
         setModalStatus={setAddMovieModalStatus}
-        movies={movies}
-        setMovies={setMovies}
+        shows={movies}
+        setShows={setMovies}
       />
 
       <div className="shows w-100 gap-1 mt-1">

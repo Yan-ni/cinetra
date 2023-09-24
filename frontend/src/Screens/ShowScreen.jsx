@@ -71,6 +71,7 @@ function ShowScreen() {
         Add a show
       </button>
       <AddShowModal
+        type="show"
         modalStatus={addShowModalStatus}
         setModalStatus={setAddShowModalStatus}
         shows={shows}
