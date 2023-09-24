@@ -101,8 +101,11 @@ export default function AddShowModal({
                     setSearch("");
                   }}
                 >
-                  <p>{name}</p>
-                  <p>{overview.slice(0, 25)}...</p>
+                  <img src={posterURL} alt="poster img" />
+                  <div>
+                    <p>{name}</p>
+                    <p>{overview}</p>
+                  </div>
                 </div>
               ))}
           </div>
