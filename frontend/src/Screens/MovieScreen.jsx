@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // components
-import Movie from "../components/Movie";
+import Show from "../components/Show";
 
 // modals
 import ShowModal from "../modals/ShowModal";
@@ -13,26 +13,6 @@ function ShowScreen() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [search, setSearch] = useState("");
-
-  const toggleFavorite = async (_id, favorite) => {
-    try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/movie/${_id}`, {
-        favorite: !favorite,
-      });
-
-      // TODO: check response status
-      setMovies(
-        movies.map((movie) => {
-          if (movie._id !== _id) return movie;
-
-          return { ...movie, favorite: !favorite };
-        })
-      );
-    } catch (error) {
-      console.error("error occured while toggling show favorite button");
-      if (import.meta.env.DEV) console.error(error);
-    }
-  };
 
   useEffect(() => {
     const loadShows = async () => {
@@ -82,11 +62,13 @@ function ShowScreen() {
         {movies
           ?.filter((movie) => movie.name.toLowerCase().includes(search))
           .map((movie) => (
-            <Movie
+            <Show
+              type="movie"
               key={movie._id}
               {...movie}
-              toggleFavorite={toggleFavorite}
-              setSelectedMovie={setSelectedMovie}
+              shows={movies}
+              setShows={setMovies}
+              setSelectedShow={setSelectedMovie}
             />
           ))}
       </div>

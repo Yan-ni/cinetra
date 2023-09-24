@@ -1,13 +1,36 @@
+import axios from "axios";
 import PropTypes from "prop-types";
 
 export default function Show({
   _id,
   name,
   favorite,
-  toggleFavorite,
   posterURL,
   setSelectedShow,
+  shows,
+  setShows,
+  type,
 }) {
+  const toggleFavorite = async (_id, favorite) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/${type}/${_id}`, {
+        favorite: !favorite,
+      });
+
+      // TODO: check response status
+      setShows(
+        shows.map((show) => {
+          if (show._id !== _id) return show;
+
+          return { ...show, favorite: !favorite };
+        })
+      );
+    } catch (error) {
+      console.error("error occured while toggling show favorite button");
+      if (import.meta.env.DEV) console.error(error);
+    }
+  };
+
   return (
     <div className="show" onClick={() => setSelectedShow(_id)}>
       <img
@@ -46,5 +69,8 @@ Show.propTypes = {
   favorite: PropTypes.bool.isRequired,
   toggleFavorite: PropTypes.func.isRequired,
   posterURL: PropTypes.string.isRequired,
+  shows: PropTypes.array.isRequired,
+  setShows: PropTypes.func.isRequired,
   setSelectedShow: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["show, movie"]).isRequired,
 };
