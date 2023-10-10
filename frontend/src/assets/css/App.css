@@ -39,7 +39,7 @@
   width: 80%;
   max-width: 500px;
   max-height: 90vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .modal textarea,
