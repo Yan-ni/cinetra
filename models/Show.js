@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const showSchema = new mongoose.Schema(
   {
-    _id: {
-      type: Number,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -33,6 +29,14 @@ const showSchema = new mongoose.Schema(
     favorite: {
       type: Boolean,
       default: false,
+    },
+    user_id: {
+      type: String,
+      required: true,
+    },
+    show_id: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }

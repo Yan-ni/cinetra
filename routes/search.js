@@ -1,6 +1,7 @@
 const router = require("express").Router();
+const verifyToken = require("../middlewares/verifyToken");
 
-router.get("/search/show", async (req, res) => {
+router.get("/search/show", verifyToken, async (req, res) => {
   const query = req.query.q;
 
   if (!query || query.length === 0) return res.json([]);
@@ -16,7 +17,7 @@ router.get("/search/show", async (req, res) => {
     response = await response.json();
 
     response = response.results.map(({ id, name, overview, poster_path }) => ({
-      _id: id,
+      show_id: id,
       name,
       overview,
       posterURL: `https://image.tmdb.org/t/p/w500${poster_path}`,
@@ -29,7 +30,7 @@ router.get("/search/show", async (req, res) => {
   }
 });
 
-router.get("/search/movie", async (req, res) => {
+router.get("/search/movie", verifyToken, async (req, res) => {
   const query = req.query.q;
 
   if (!query || query.length === 0) return res.json([]);
@@ -45,7 +46,7 @@ router.get("/search/movie", async (req, res) => {
     response = await response.json();
 
     response = response.results.map(({ id, title, overview, poster_path }) => ({
-      _id: id,
+      show_id: id,
       name: title,
       overview,
       posterURL: `https://image.tmdb.org/t/p/w500${poster_path}`,

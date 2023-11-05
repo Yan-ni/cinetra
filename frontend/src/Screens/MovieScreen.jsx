@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // components
@@ -13,8 +14,11 @@ function ShowScreen() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    axios.defaults.headers.common["Authorization"] =
+      localStorage.getItem("Authorization");
     const loadShows = async () => {
       try {
         const result = await axios.get(
@@ -24,12 +28,16 @@ function ShowScreen() {
         if (result.status === 200 && Array.isArray(result.data))
           setMovies(result.data);
       } catch (error) {
+        if (error.response.status === 401) {
+          navigate("/login");
+        }
         console.error("error occured loading shows");
         if (import.meta.env.DEV) console.error(error);
       }
     };
 
     loadShows();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -170,7 +170,7 @@ export default function ShowModal({
 }
 
 ShowModal.propTypes = {
-  selectedShow: PropTypes.number,
+  selectedShow: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,

@@ -64,7 +64,7 @@ export default function Show({
 }
 
 Show.propTypes = {
-  _id: PropTypes.number.isRequired,
+  _id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   favorite: PropTypes.bool.isRequired,
   toggleFavorite: PropTypes.func.isRequired,
@@ -72,5 +72,5 @@ Show.propTypes = {
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
   setSelectedShow: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(["show, movie"]).isRequired,
+  type: PropTypes.oneOf(["show", "movie"]).isRequired,
 };

@@ -15,7 +15,7 @@ export default function AddShowModal({
   const [searchResult, setSearchResult] = useState([]);
 
   const [show, setShow] = useState({
-    _id: "",
+    show_id: "",
     name: "",
     overview: "",
     posterURL: "",
@@ -29,7 +29,7 @@ export default function AddShowModal({
     setSearch("");
     setSearchResult("");
     setShow({
-      _id: "",
+      show_id: "",
       name: "",
       overview: "",
       posterURL: "",
@@ -92,26 +92,28 @@ export default function AddShowModal({
           />
           <div className="searchResult">
             {searchResult &&
-              searchResult.map(({ _id, name, overview, posterURL }, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setShow({
-                      _id,
-                      name,
-                      overview,
-                      posterURL,
-                    });
-                    setSearch("");
-                  }}
-                >
-                  <img src={posterURL} alt="poster img" />
-                  <div>
-                    <p>{name}</p>
-                    <p>{overview}</p>
+              searchResult.map(
+                ({ show_id, name, overview, posterURL }, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setShow({
+                        show_id,
+                        name,
+                        overview,
+                        posterURL,
+                      });
+                      setSearch("");
+                    }}
+                  >
+                    <img src={posterURL} alt="poster img" />
+                    <div>
+                      <p>{name}</p>
+                      <p>{overview}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
           </div>
         </div>
 
