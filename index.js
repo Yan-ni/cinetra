@@ -17,17 +17,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("combined"));
 
 // setup routes
-const loginRoutes = require("./routes/login");
-const signupRoutes = require("./routes/signup");
-const searchRoute = require("./routes/search");
-const showRoutes = require("./routes/show");
-const movieRoutes = require("./routes/movie");
+const {
+  authenticationRouter,
+  searchRouter,
+  showRouter,
+  movieRouter,
+} = require("./routes");
 
-app.use(loginRoutes);
-app.use(signupRoutes);
-app.use(searchRoute);
-app.use(showRoutes);
-app.use(movieRoutes);
+app.use(authenticationRouter);
+app.use(searchRouter);
+app.use(showRouter);
+app.use(movieRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));
