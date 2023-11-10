@@ -41,53 +41,41 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  put: {
-    show: async (req, res) => {
-      const showId = req.params.id;
-      const { body } = req;
+  put: async (req, res) => {
+    /** We allow an update on the following fields :
+     * seasonsWatched
+     * episodesWatched
+     * favorite
+     * completed
+     */
+    const showId = req.params.id;
+    const { body } = req;
 
-      if (!showId || !body) res.sendStatus(204);
+    if (!showId || !body) res.sendStatus(204);
 
-      try {
-        const show = await Show.findOne({ _id: showId });
+    try {
+      const show = await Show.findOne({ _id: showId });
 
-        if (!show) return res.sendStatus(204);
+      if (!show) return res.sendStatus(404);
 
-        if (show.user_id !== req.user.id) return res.sendStatus(403);
+      if (show.user_id !== req.user.id) return res.sendStatus(403);
 
-        if (Number.isInteger(body.seasonsWatched))
-          show.seasonsWatched = body.seasonsWatched;
+      if (Number.isInteger(body.seasonsWatched))
+        show.seasonsWatched = body.seasonsWatched;
 
-        if (Number.isInteger(body.episodesWatched))
-          show.episodesWatched = body.episodesWatched;
+      if (Number.isInteger(body.episodesWatched))
+        show.episodesWatched = body.episodesWatched;
 
-        if (typeof body.favorite === "boolean") show.favorite = body.favorite;
+      if (typeof body.favorite === "boolean") show.favorite = body.favorite;
 
-        await show.save();
-        res.json(show);
-      } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-      }
-    },
-    toggleComplete: async (req, res) => {
-      const showId = req.params.id;
+      if (typeof body.completed === "boolean") show.completed = body.completed;
 
-      try {
-        const show = await Show.findOne({ _id: showId, user_id: req.user.id });
-
-        if (!show) return res.sendStatus(204);
-
-        show.completed = !show.completed;
-
-        await show.save();
-
-        res.json(show);
-      } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-      }
-    },
+      await show.save();
+      res.json(show);
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+    }
   },
   delete: async (req, res) => {
     const showId = req.params.id;

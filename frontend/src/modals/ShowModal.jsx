@@ -50,7 +50,10 @@ export default function ShowModal({
   const toggleComplete = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}/complete`
+        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}/complete`,
+        {
+          completed: !show.completed,
+        }
       );
       setShow({
         ...show,
