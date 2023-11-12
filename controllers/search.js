@@ -1,10 +1,10 @@
 module.exports = {
   get: async (req, res) => {
-    const type = (req.params.type === "tv" && "show") || req.params.type;
+    const type = (req.params.type === "show" && "tv") || req.params.type;
     const query = req.query.q;
 
     if (!query || query.length === 0) return res.json([]);
-    if (type !== "show" && type !== "movie") return res.json([]);
+    if (type !== "tv" && type !== "movie") return res.json([]);
 
     try {
       let response = await fetch(
