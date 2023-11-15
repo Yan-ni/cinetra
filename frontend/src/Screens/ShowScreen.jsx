@@ -14,7 +14,15 @@ function ShowScreen() {
   const [shows, setShows] = useState([]);
   const [selectedShow, setSelectedShow] = useState(null);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({});
   const navigate = useNavigate();
+
+  const handleFilterChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   useEffect(() => {
     axios.defaults.headers.common["Authorization"] =
@@ -66,9 +74,50 @@ function ShowScreen() {
         setShows={setShows}
       />
 
+      <select name="favoriteFilter" onChange={handleFilterChange}>
+        <option value="" default>
+          Filter by Favorite
+        </option>
+        <option value="favorite">favorite</option>
+        <option value="notFavorite">not favorite</option>
+      </select>
+
+      <select name="completeFilter" onChange={handleFilterChange}>
+        <option value="" default>
+          Filter by Complete
+        </option>
+        <option value="completed">completed</option>
+        <option value="notCompleted">not completed</option>
+      </select>
+
       <div className="shows w-100 gap-1 mt-1">
         {shows
-          ?.filter((show) => show.name.toLowerCase().includes(search))
+          ?.filter((show) => {
+            if (!show.name.toLowerCase().includes(search)) return false;
+
+            if (filters.favoriteFilter === "favorite" && show.favorite !== true)
+              return false;
+
+            if (
+              filters.favoriteFilter === "notFavorite" &&
+              show.favorite !== false
+            )
+              return false;
+
+            if (
+              filters.completeFilter === "completed" &&
+              show.completed !== true
+            )
+              return false;
+
+            if (
+              filters.completeFilter === "notCompleted" &&
+              show.completed !== false
+            )
+              return false;
+
+            return true;
+          })
           .map((show) => (
             <Show
               type="show"
