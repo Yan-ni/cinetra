@@ -55,6 +55,17 @@ export default function ShowModal({
           completed: !show.completed,
         }
       );
+      setShows(
+        shows.map((s) => {
+          if (s.show_id === show.show_id) {
+            return {
+              ...show,
+              completed: !show.completed,
+            };
+          }
+          return s;
+        })
+      );
       setShow({
         ...show,
         completed: !show.completed,
