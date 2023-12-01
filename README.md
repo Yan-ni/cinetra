@@ -1,16 +1,16 @@
-# Shownote
+# Cinetra
 
 Have you ever started a TV show and then made a long pause to come back to it but don't remember at which season or episode you stopped watching?
 
 Have you ever had a long watchlist, and you forget which movie you wanted to watch?
 
-Shownote is here to provide a set of solutions for the management of your watch progress.
+Cinetra is here to provide a set of solutions for the management of your watch progress.
 
 ## Getting Started
 
 ### Prerequisites
 
-To be able to run shownote, you need :
+To be able to run cinetra, you need :
 
 * Node.js (>= 20.7.0)
 * npm (>= 10.1.0)
@@ -21,13 +21,13 @@ To be able to run shownote, you need :
 Clone the repository :
 
 ```bash
-git clone https://github.com/Yan-ni/shownote.git
+git clone https://github.com/Yan-ni/cinetra.git
 ```
 
 Change the working directory to the project directory:
 
 ```bash
-cd shownote
+cd cinetra
 ```
 
 Install backend dependencies :
