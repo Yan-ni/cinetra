@@ -25,21 +25,23 @@ export default function AddShowModal({
     setSearch(value);
   }, 600);
 
-  const resetstates = () => {
+  const closeModal = () => {
+    setModalStatus(false);
     setSearch("");
-    setSearchResult("");
+    setSearchResult([]);
     setShow({
       show_id: "",
       name: "",
       overview: "",
       posterURL: "",
     });
+    document.querySelector("#searchInput").value = "";
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!show.name || !show.overview || !show.posterURL) {
-      setModalStatus(false);
+      closeModal();
       return;
     }
 
@@ -56,9 +58,44 @@ export default function AddShowModal({
           );
       })
       .finally(() => {
-        setModalStatus(false);
-        resetstates();
+        closeModal();
       });
+  };
+
+  const filterAndMapSearchResult = (searchResult) => {
+    const result = [];
+
+    // Time complexity : O(n)
+    searchResult.forEach(({ show_id, name, overview, posterURL }, index) => {
+      if (
+        name &&
+        overview &&
+        posterURL &&
+        !shows.find((show) => show.show_id === show_id)
+      )
+        result.push(
+          <div
+            key={index}
+            onClick={() => {
+              setShow({
+                show_id,
+                name,
+                overview,
+                posterURL,
+              });
+              setSearch("");
+            }}
+          >
+            <img src={posterURL} alt="poster img" />
+            <div>
+              <p>{name}</p>
+              <p>{overview}</p>
+            </div>
+          </div>
+        );
+    });
+
+    return result;
   };
 
   useEffect(() => {
@@ -81,39 +118,20 @@ export default function AddShowModal({
   return (
     <Modal
       className={`${modalStatus ? "flex" : ""}`}
-      close={() => setModalStatus(false)}
+      close={() => closeModal()}
     >
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="searchShow">search the {type} you want to add</label>
           <input
+            id="searchInput"
             type="text"
+            autoComplete="off"
             onChange={(e) => handleSearchInput(e.target.value)}
           />
           <div className="searchResult">
-            {searchResult &&
-              searchResult.map(
-                ({ show_id, name, overview, posterURL }, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setShow({
-                        show_id,
-                        name,
-                        overview,
-                        posterURL,
-                      });
-                      setSearch("");
-                    }}
-                  >
-                    <img src={posterURL} alt="poster img" />
-                    <div>
-                      <p>{name}</p>
-                      <p>{overview}</p>
-                    </div>
-                  </div>
-                )
-              )}
+            {/* Time complexity : O(n) */}
+            {searchResult && filterAndMapSearchResult(searchResult)}
           </div>
         </div>
 
@@ -157,7 +175,7 @@ export default function AddShowModal({
           <button
             className="btn-secondary inline-block"
             type="button"
-            onClick={() => setModalStatus(false)}
+            onClick={() => closeModal()}
           >
             cancel
           </button>
