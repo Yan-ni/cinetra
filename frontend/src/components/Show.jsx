@@ -33,11 +33,7 @@ export default function Show({
 
   return (
     <div className="show" onClick={() => setSelectedShow(_id)}>
-      <img
-        className="w-100 h-100 object-fit-cover"
-        src={posterURL}
-        alt="show image"
-      />
+      <img className="w-100 h-100 object-fit-cover" src={posterURL} alt="" />
       <svg
         className="heart"
         viewBox="0 0 24 24"
