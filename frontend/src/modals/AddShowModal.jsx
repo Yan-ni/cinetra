@@ -86,7 +86,7 @@ export default function AddShowModal({
               setSearch("");
             }}
           >
-            <img src={posterURL} alt="poster img" />
+            <img src={posterURL} alt="" />
             <div>
               <p>{name}</p>
               <p>{overview}</p>

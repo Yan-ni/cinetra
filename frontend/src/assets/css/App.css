@@ -121,27 +121,27 @@
   background-color: #202020;
 }
 
-.searchResult > div img {
-  height: 4rem;
+.searchResult img {
+  height: 3.8rem;
 }
 
-.searchResult > div > div > p:nth-child(1) {
-  font-weight: 500;
-}
-
-.searchResult > div > div > p:nth-child(2) {
+.searchResult p {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 500;
 }
 
-.show-img img {
-  width: 100%;
-  object-fit: cover;
+.searchResult img {
+  aspect-ratio: 3/4;
+}
+
+.searchResult > div > div > p:nth-child(2) {
+  -webkit-line-clamp: 2;
+  font-size: 0.85rem;
+  font-weight: 300;
 }
 
 .heart {
