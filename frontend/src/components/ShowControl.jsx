@@ -25,6 +25,6 @@ ShowControl.propTypes = {
   name: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
   update: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
   children: PropTypes.string.isRequired,
 };

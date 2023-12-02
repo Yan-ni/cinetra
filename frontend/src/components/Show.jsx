@@ -67,7 +67,6 @@ Show.propTypes = {
   _id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   favorite: PropTypes.bool.isRequired,
-  toggleFavorite: PropTypes.func.isRequired,
   posterURL: PropTypes.string.isRequired,
   shows: PropTypes.array.isRequired,
   setShows: PropTypes.func.isRequired,
