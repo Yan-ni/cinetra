@@ -19,9 +19,9 @@ module.exports = {
       response = await response.json();
 
       response = response.results.map(
-        ({ id, name, overview, poster_path }) => ({
+        ({ id, title, name, overview, poster_path }) => ({
           show_id: id,
-          name,
+          name: name || title,
           overview,
           posterURL: `https://image.tmdb.org/t/p/w500${poster_path}`,
         })
