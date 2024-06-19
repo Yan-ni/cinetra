@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    env_file: .env
+    volumes:
+      - dbdata:/data/db
+    ports:
+      - 27017:27017
+
+  backend:
+    build: .
+    depends_on:
+      - mongodb
+    ports:
+      - "${PORT}:${PORT}"
+
+volumes:
+  dbdata:
