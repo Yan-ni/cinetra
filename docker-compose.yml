@@ -10,6 +10,7 @@ services:
 
   backend:
     build: .
+    env_file: .env
     depends_on:
       - mongodb
     ports:
