@@ -42,7 +42,9 @@ const port = process.env.PORT | 3000;
 (async () => {
   try {
     // DB connect
-    await mongoose.connect(process.env.DB_CONNECTION_STRING);
+    await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+      authSource: "admin"
+    });
     console.log("successfully connected to database.");
 
     // app start
