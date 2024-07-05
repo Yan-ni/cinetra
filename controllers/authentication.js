@@ -58,4 +58,39 @@ module.exports = {
       }
     },
   },
+  password: {
+    put: async (req, res, next) => {
+      const { currentPassword, newPassword } = req.body;
+
+      if(currentPassword === undefined || newPassword === undefined) {
+        res.sendStatus(400);
+        return;
+      }
+
+      const user = await User.findOne({_id: req.user.id});
+
+      if(!user) {
+        res.sendStatus(404);
+        return;
+      }
+
+      // verify password
+      const passwordComparison = await bcrypt.compareSync(
+        currentPassword,
+        user.password
+      );
+
+      if (!passwordComparison) return res.sendStatus(403);
+
+      const hashedPassword = await bcrypt.hashSync(newPassword, saltRounds);
+      
+      try {
+        user.password = hashedPassword;
+        user.save();
+        res.sendStatus(200);
+      } catch(e) {
+        res.sendStatus(500);
+      }
+    }
+  }
 };
