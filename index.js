@@ -7,7 +7,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-// load environement variables
+// load environment variables
 dotenv.config();
 
 // middlewares
