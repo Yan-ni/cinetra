@@ -1,18 +1,22 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import { Request, Response, NextFunction } from "express";
+import User from "../models/User";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
-module.exports = {
+export default {
   login: {
-    post: async (req, res, next) => {
+    post: async (req: Request, res: Response, next: NextFunction) => {
       const { username, password } = req.body;
 
       try {
         // verify username
         const dbRes = await User.findOne({ username });
-        if (dbRes === null) return res.sendStatus(404);
+        if (dbRes === null) {
+          res.sendStatus(404);
+          return;
+        }
 
         // verify password
         const passwordComparison = await bcrypt.compareSync(
@@ -20,11 +24,14 @@ module.exports = {
           dbRes.password
         );
 
-        if (!passwordComparison) return res.sendStatus(400);
+        if (!passwordComparison) {
+          res.sendStatus(400);
+          return;
+        }
 
         const userSigned = await jwt.sign(
           { id: dbRes._id, username },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET || "secret"
         );
 
         res.json(userSigned);
@@ -34,7 +41,7 @@ module.exports = {
     },
   },
   signup: {
-    post: async (req, res, next) => {
+    post: async (req: Request, res: Response, next: NextFunction) => {
       const { username, password } = req.body;
 
       //todo: validate username and password
@@ -49,7 +56,7 @@ module.exports = {
         // generate token
         const userSigned = await jwt.sign(
           { id: user._id, username: user.username },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET || "secret"
         );
 
         res.status(201).json(userSigned);
@@ -59,7 +66,7 @@ module.exports = {
     },
   },
   password: {
-    put: async (req, res, next) => {
+    put: async (req: Request, res: Response, next: NextFunction) => {
       const { currentPassword, newPassword } = req.body;
 
       if(currentPassword === undefined || newPassword === undefined) {
@@ -67,7 +74,7 @@ module.exports = {
         return;
       }
 
-      const user = await User.findOne({_id: req.user.id});
+      const user = await User.findOne({_id: req.user?.id});
 
       if(!user) {
         res.sendStatus(404);
@@ -80,7 +87,10 @@ module.exports = {
         user.password
       );
 
-      if (!passwordComparison) return res.sendStatus(403);
+      if (!passwordComparison) {
+        res.sendStatus(403);
+        return;
+      }
 
       const hashedPassword = await bcrypt.hashSync(newPassword, saltRounds);
       

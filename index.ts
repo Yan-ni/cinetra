@@ -1,9 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const path = require("path");
-const morgan = require("morgan");
+import express, {Request, Response} from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import path from "path";
+import morgan from "morgan";
 
 const app = express();
 
@@ -17,12 +17,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("combined"));
 
 // setup routes
-const {
+import {
   authenticationRouter,
   searchRouter,
   showRouter,
   movieRouter,
-} = require("./routes");
+} from "./routes";
 
 app.use(authenticationRouter);
 app.use(searchRouter);
@@ -30,19 +30,23 @@ app.use(showRouter);
 app.use(movieRouter);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend", "dist")));
+  app.use(express.static(path.join(__dirname, "..", "frontend", "dist")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  app.get("*", (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "..", "frontend", "dist", "index.html"));
   });
 }
 
 // setup server
-const port = process.env.PORT | 3000;
+const port = process.env.PORT || 3000;
 (async () => {
   try {
     // DB connect
-    await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+    const databaseURI = process.env.DB_CONNECTION_STRING;
+    if (databaseURI === undefined) {
+      throw new Error('A database connection string must be provided.');
+    }
+    await mongoose.connect(databaseURI, {
       authSource: "admin"
     });
     console.log("successfully connected to database.");
