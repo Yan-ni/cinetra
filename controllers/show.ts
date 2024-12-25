@@ -1,7 +1,8 @@
-const Show = require("../models/Show");
+import { Request, Response } from "express";
+import Show from "../models/Show";
 
-module.exports = {
-  get: async (req, res) => {
+export default {
+  get: async (req: Request, res: Response) => {
     const showId = req.params.id;
     try {
       if (showId) {
@@ -22,7 +23,7 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  post: async (req, res) => {
+  post: async (req: Request, res: Response) => {
     try {
       const exists = await Show.findOne({
         show_id: req.body?.show_id,
@@ -41,7 +42,7 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  put: async (req, res) => {
+  put: async (req: Request, res: Response) => {
     /** We allow an update on the following fields :
      * seasonsWatched
      * episodesWatched
@@ -56,9 +57,15 @@ module.exports = {
     try {
       const show = await Show.findOne({ _id: showId });
 
-      if (!show) return res.sendStatus(404);
+      if (!show) {
+        res.sendStatus(404);
+        return;
+      }
 
-      if (show.user_id !== req.user.id) return res.sendStatus(403);
+      if (show.user_id !== req.user.id) {
+        res.sendStatus(403);
+        return;
+      }
 
       if (Number.isInteger(body.seasonsWatched))
         show.seasonsWatched = body.seasonsWatched;
@@ -77,7 +84,7 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  delete: async (req, res) => {
+  delete: async (req: Request, res: Response) => {
     const showId = req.params.id;
 
     if (!showId) res.sendStatus(400);
@@ -85,7 +92,10 @@ module.exports = {
     try {
       const show = await Show.findById(showId);
 
-      if (show.user_id !== req.user.id) return res.sendStatus(403);
+      if (show?.user_id !== req.user?.id) {
+        res.sendStatus(403);
+        return;
+      }
 
       await Show.deleteOne({ _id: showId });
       res.sendStatus(200);

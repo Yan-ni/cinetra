@@ -1,6 +1,15 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-const showSchema = new mongoose.Schema(
+interface ShowType extends Document {
+  name: string;
+  overview: string;
+  posterURL: string;
+  favorite: boolean;
+  user_id: string;
+  show_id: number;
+}
+
+const movieSchema: Schema<ShowType> = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -13,18 +22,6 @@ const showSchema = new mongoose.Schema(
     posterURL: {
       type: String,
       required: true,
-    },
-    seasonsWatched: {
-      type: Number,
-      default: 0,
-    },
-    episodesWatched: {
-      type: Number,
-      default: 0,
-    },
-    completed: {
-      type: Boolean,
-      default: false,
     },
     favorite: {
       type: Boolean,
@@ -42,4 +39,6 @@ const showSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Show", showSchema);
+const Show: Model<ShowType> = mongoose.model<ShowType>("Movie", movieSchema);
+
+export default Show;
