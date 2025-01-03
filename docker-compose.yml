@@ -2,7 +2,6 @@ services:
   mongodb:
     env_file: .env
     image: mongo
-    restart: always
     volumes:
       - dbdata:/data/db
     ports:
