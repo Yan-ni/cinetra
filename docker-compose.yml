@@ -1,19 +1,23 @@
 services:
   mongodb:
+    container_name: cinetra-db
     env_file: .env
     image: mongo
     volumes:
       - dbdata:/data/db
     ports:
       - 27017:27017
+    restart: unless-stopped
 
   backend:
+    container_name: cinetra-server
     build: .
     env_file: .env
     depends_on:
       - mongodb
     ports:
       - "${PORT}:${PORT}"
+    restart: unless-stopped
 
 volumes:
   dbdata:
