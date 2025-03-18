@@ -1,30 +1,16 @@
-import { useState } from "react";
+import { LoginForm } from "@/components/login-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  });
 
-  const handleInput = (e) => {
-    setCredentials({
-      ...credentials,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (credentials: {username: string; password: string}) => {
     try {
-      console.log("starting the request")
       let response = await axios.post(
         `${import.meta.env.VITE_API_PATH || ""}/login`,
         credentials
       );
-      console.log("ending the request")
 
       console.log(`Bearer ${response.data}`);
       localStorage.setItem("Authorization", `Bearer ${response.data}`);
@@ -33,40 +19,28 @@ export default function LoginScreen() {
       console.error("an error uccured during login");
     }
   };
-
+  
   return (
-    <div className="vh-100 flex align-items-center justify-content-center">
-      <form
-        className="translateY--20 p-1 w-fit-content"
-        onSubmit={handleSubmit}
-      >
-        <h1>Login</h1>
-        <div className="input-group">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            onChange={handleInput}
-            required
-          />
+    <div className="grid min-h-svh lg:grid-cols-2">
+      <div className="flex flex-col gap-4 p-6 md:p-10">
+        <div className="flex justify-center gap-2 md:justify-start">
+          <a href="/" className="flex items-center gap-2 font-medium">
+            Cinetra
+          </a>
         </div>
-
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            onChange={handleInput}
-            required
-          />
+        <div className="flex flex-1 items-center justify-center">
+          <div className="w-full max-w-xs">
+            <LoginForm onSubmit={handleSubmit} />
+          </div>
         </div>
-
-        <button type="submit" className="btn-primary ml-auto">
-          Login
-        </button>
-      </form>
+      </div>
+      <div className="relative hidden bg-muted lg:block">
+        <img
+          src="/images/login-placeholder.png"
+          alt="Image"
+          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        />
+      </div>
     </div>
-  );
+  )
 }
