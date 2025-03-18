@@ -19,10 +19,13 @@ export default function LoginScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("starting the request")
       let response = await axios.post(
         `${import.meta.env.VITE_API_PATH || ""}/login`,
         credentials
       );
+      console.log("ending the request")
+
       console.log(`Bearer ${response.data}`);
       localStorage.setItem("Authorization", `Bearer ${response.data}`);
       navigate("/");

@@ -2,7 +2,7 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import Modal from "../components/Modal";
+import Modal from "../components/Modal.tsx";
 
 export default function AddShowModal({
   modalStatus,

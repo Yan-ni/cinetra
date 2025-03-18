@@ -1,13 +1,14 @@
 import "./assets/css/App.css";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { FC } from 'react';
 
 // Screens
-import ShowScreen from "./Screens/ShowScreen";
-import MovieScreen from "./Screens/MovieScreen";
-import LoginScreen from "./Screens/LoginScreen";
+import ShowScreen from "./Screens/ShowScreen.tsx";
+import MovieScreen from "./Screens/MovieScreen.tsx";
+import LoginScreen from "./Screens/LoginScreen.tsx";
 
-function App() {
+const App: FC = () => {
   return (
     <BrowserRouter>
       <Routes>

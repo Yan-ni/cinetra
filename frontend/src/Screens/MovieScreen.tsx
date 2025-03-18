@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // components
-import Show from "../components/Show";
+import Show from "../components/Show.tsx";
 
 // modals
-import ShowModal from "../modals/ShowModal";
-import AddShowModal from "../modals/AddShowModal";
+import ShowModal from "../modals/ShowModal.tsx";
+import AddShowModal from "../modals/AddShowModal.tsx";
 
 function ShowScreen() {
   const [addMovieModalStatus, setAddMovieModalStatus] = useState(false);

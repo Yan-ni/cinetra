@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Modal from "../components/Modal";
+import Modal from "../components/Modal.tsx";
 import PropTypes from "prop-types";
 import axios from "axios";
-import ShowControl from "../components/ShowControl";
+import ShowControl from "../components/ShowControl.tsx";
 
 export default function ShowModal({
   selectedShow,
