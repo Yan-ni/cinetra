@@ -18,15 +18,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogFooter
-} from "@/components/ui/dialog"
+import { SiteHeader } from "@/components/site-header.tsx";
 
 export default function HomeScreen() {
     const [addShowModalStatus, setAddShowModalStatus] = useState(false);
@@ -85,13 +77,13 @@ export default function HomeScreen() {
                                             <Button onClick={() => setAddShowModalStatus(true)}>
                                                 Add a show
                                             </Button>
-                                            {/* <AddShowModal
+                                            <AddShowModal
                                                 type="show"
                                                 modalStatus={addShowModalStatus}
                                                 setModalStatus={setAddShowModalStatus}
                                                 shows={shows}
                                                 setShows={setShows}
-                                            /> */}
+                                            />
                                         </div>
 
                                         <div className="flex flex-col gap-1 min-w-[200px]">
