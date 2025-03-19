@@ -1,5 +1,15 @@
 import axios from "axios";
-import PropTypes from "prop-types";
+
+interface ShowType {
+  _id: string;
+  name: string;
+  favorite: boolean;
+  posterURL: string;
+  setSelectedShow: (_id: string) => void;
+  shows: any;
+  setShows: any;
+  type: "show" | "movie";
+}
 
 export default function Show({
   _id,
@@ -10,8 +20,8 @@ export default function Show({
   shows,
   setShows,
   type,
-}) {
-  const toggleFavorite = async (_id, favorite) => {
+}: ShowType) {
+  const toggleFavorite = async (_id: string, favorite: boolean) => {
     try {
       await axios.put(`${import.meta.env.VITE_API_PATH || ""}/${type}/${_id}`, {
         favorite: !favorite,
@@ -33,7 +43,7 @@ export default function Show({
 
   return (
     <div className="show" onClick={() => setSelectedShow(_id)}>
-      <img className="w-100 h-100 object-fit-cover" src={posterURL} alt="" />
+      <img className="w-full h-full object-cover" src={posterURL} alt="" />
       <svg
         className="heart"
         viewBox="0 0 24 24"
@@ -54,18 +64,7 @@ export default function Show({
           strokeLinejoin="round"
         />
       </svg>
-      <h2 title={name}>{name}</h2>
+      <h2 className="mb-3" title={name}>{name}</h2>
     </div>
   );
 }
-
-Show.propTypes = {
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  favorite: PropTypes.bool.isRequired,
-  posterURL: PropTypes.string.isRequired,
-  shows: PropTypes.array.isRequired,
-  setShows: PropTypes.func.isRequired,
-  setSelectedShow: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(["show", "movie"]).isRequired,
-};

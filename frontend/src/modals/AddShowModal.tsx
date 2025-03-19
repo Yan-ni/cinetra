@@ -2,7 +2,6 @@ import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import Modal from "../components/Modal.tsx";
 
 export default function AddShowModal({
   modalStatus,
@@ -116,10 +115,10 @@ export default function AddShowModal({
   }, [search, type]);
 
   return (
-    <Modal
-      className={`${modalStatus ? "flex" : ""}`}
-      close={() => closeModal()}
-    >
+    // <Modal
+    //   className={`${modalStatus ? "flex" : ""}`}
+    //   close={() => closeModal()}
+    // >
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="searchShow">search the {type} you want to add</label>
@@ -184,7 +183,7 @@ export default function AddShowModal({
           </button>
         </div>
       </form>
-    </Modal>
+    // </Modal>
   );
 }
 

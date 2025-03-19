@@ -1,7 +1,6 @@
 /************** App **************/
 .app {
   padding: 1rem;
-  max-width: 1000px;
   margin: 0 auto;
   position: relative;
 }
@@ -24,7 +23,6 @@
 /************** Modal **************/
 .modal-background {
   background-color: #00000080;
-  display: none;
   position: fixed;
   inset: 0;
   align-items: center;
@@ -81,18 +79,20 @@
   content: "";
   background: linear-gradient(0deg, rgb(0, 0, 0), rgba(0, 0, 0, 0));
   position: absolute;
-  inset: 60% 0 0 0;
+  inset: 50% 0 0 0;
+  /* z-index: 1; */
 }
 
 .show h2 {
   width: 12ch;
+  color: white;
 
   font-size: 1rem;
   font-weight: normal;
 
   position: absolute;
   bottom: 0;
-  left: 0.7rem;
+  left: 0.5rem;
   z-index: 1;
 
   white-space: nowrap;

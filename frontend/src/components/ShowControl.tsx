@@ -1,20 +1,21 @@
 import PropTypes from "prop-types";
+import { Button } from "./ui/button";
 
 export default function ShowControl({ name, active, update, count, children }) {
   return (
-    <div className="flex flex-column">
-      <h3 className="text-align-center">{children}</h3>
-      <div className="button-group align-self-center flex align-items-center gap-2">
+    <div className="flex flex-col">
+      <h3 className="text-center text-l font-bold mb-3">{children}</h3>
+      <div className="button-group flex self-center items-center gap-2">
         {active && (
-          <button className="btn-primary" name={name} onClick={update}>
+          <Button className="rounded-full" name={name} onClick={update}>
             -
-          </button>
+          </Button>
         )}
         <p>{count}</p>
         {active && (
-          <button className="btn-primary" name={name} onClick={update}>
+          <Button className="rounded-full" name={name} onClick={update}>
             +
-          </button>
+          </Button>
         )}
       </div>
     </div>
