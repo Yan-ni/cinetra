@@ -9,12 +9,13 @@ import {
     DialogFooter
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button.tsx";
+import { ShowType } from "@/types/index.ts";
 
-interface ShowodalType {
+interface ShowModalProps {
     selectedShow: string | null;
     closeModal: () => void;
-    shows: [];
-    setShows: (shows: []) => void;
+    shows: ShowType[];
+    setShows: (shows: ShowType[]) => void;
     type: "show" | "movie";
 }
 
@@ -24,41 +25,65 @@ export default function ShowModal({
     shows,
     setShows,
     type,
-}: ShowodalType) {
-    const [show, setShow] = useState({});
-    const [overviewCollaplsed, setOverviewCollapsed] = useState(true);
+}: ShowModalProps) {
+    const [show, setShow] = useState<ShowType>({
+        _id: "",
+        name: "",
+        overview: "",
+        posterURL: "",
+        seasonsWatched: 0,
+        episodesWatched: 0,
+        completed: false,
+        favorite: false,
+        user_id: "",
+        show_id: 0,
+    });
+    const [overviewCollapsed, setOverviewCollapsed] = useState(true);
 
-    const update = async (e) => {
-        const data = {};
-        const op = e.target.textContent;
-        const type = e.target.name;
+    const update = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const payload: {
+            seasonsWatched?: number;
+            episodesWatched?: number;
+        } = {};
+        const target = e.target as HTMLButtonElement;
+        const op = target.textContent;
+        const type = target.name;
 
-        if (type === "seasons") {
-            data.seasonsWatched = show.seasonsWatched + (op === "-" ? -1 : 1);
-        } else {
-            data.episodesWatched = show.episodesWatched + (op === "-" ? -1 : 1);
-        }
+        if (op !== "+" && op !== "-") return;
 
-        try {
-            const res = await axios.put(
-                `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`,
-                data
-            );
-            if (res.status === 200) {
-                if (data.seasonsWatched !== undefined)
-                    setShow((prev) => ({ ...prev, seasonsWatched: data.seasonsWatched }));
-                else if (data.episodesWatched !== undefined)
-                    setShow((prev) => ({
-                        ...prev,
-                        episodesWatched: data.episodesWatched,
-                    }));
+        if (type !== "seasons" && type !== "episodes") return;
+
+        if (type === "seasons")
+            payload.seasonsWatched = show.seasonsWatched + (op === "-" ? -1 : 1);
+
+        if (type === "episodes")
+            payload.episodesWatched = show.episodesWatched + (op === "-" ? -1 : 1);
+
+        await axios.put(
+            `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`,
+            payload
+        ).then((response) => {
+            if (response.status !== 200) return;
+
+            if (payload.seasonsWatched) {
+                setShow((prev) => ({
+                    ...prev,
+                    seasonsWatched: payload.seasonsWatched as number,
+                }));
             }
-        } catch (error) {
+
+            if (payload.episodesWatched) {
+                setShow((prev) => ({
+                    ...prev,
+                    episodesWatched: payload.episodesWatched as number, // Assert non-undefined
+                }));
+            }
+        }).catch(error => {
             console.error(
-                "error occured when updating show's seasons count or episodes count"
+                "error occurred when updating show's seasons count or episodes count"
             );
             if (import.meta.env.DEV) console.error(error);
-        }
+        })
     };
 
     const toggleComplete = async () => {
@@ -70,7 +95,7 @@ export default function ShowModal({
                 }
             );
             setShows(
-                shows.map((s) => {
+                shows.map<ShowType>((s) => {
                     if (s.show_id === show.show_id) {
                         return {
                             ...show,
@@ -115,13 +140,13 @@ export default function ShowModal({
     }, [selectedShow, type]);
 
     return (
-        <Dialog open={selectedShow !== null} onOpenChange={setOpenModal}>
+        <Dialog open={selectedShow?.length !== 0} onOpenChange={setOpenModal}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{show.name}</DialogTitle>
                 </DialogHeader>
                 <p
-                    className={`overview ${overviewCollaplsed ? "line-clamp-3" : "inline"}`}
+                    className={`overview ${overviewCollapsed ? "line-clamp-3" : "inline"}`}
                 >
                     {show.overview}{" "}
                     <a
@@ -129,10 +154,10 @@ export default function ShowModal({
                         className="text-blue-600"
                         onClick={(e) => {
                             e.preventDefault();
-                            setOverviewCollapsed(!overviewCollaplsed);
+                            setOverviewCollapsed(!overviewCollapsed);
                         }}
                     >
-                        read {overviewCollaplsed ? "more" : "less"}
+                        read {overviewCollapsed ? "more" : "less"}
                     </a>
                 </p>
 
@@ -160,9 +185,8 @@ export default function ShowModal({
                 {type === "show" && (
                     <>
                         <Button
-                            className={`${
-                                show.completed ? "bg-green-500" : ""
-                              }`}
+                            className={`${show.completed ? "bg-green-500" : ""
+                                }`}
                             onClick={toggleComplete}
                         >
                             {show.completed ? "Show completed !" : "Mark as Complete"}

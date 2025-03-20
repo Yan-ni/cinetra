@@ -1,7 +1,14 @@
-import PropTypes from "prop-types";
 import { Button } from "./ui/button";
 
-export default function ShowControl({ name, active, update, count, children }) {
+interface ShowControlProps {
+  name: string;
+  active: boolean;
+  update: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  count: number;
+  children: React.ReactNode
+}
+
+export default function ShowControl({ name, active, update, count, children }: ShowControlProps) {
   return (
     <div className="flex flex-col">
       <h3 className="text-center text-l font-bold mb-3">{children}</h3>
@@ -21,11 +28,3 @@ export default function ShowControl({ name, active, update, count, children }) {
     </div>
   );
 }
-
-ShowControl.propTypes = {
-  name: PropTypes.string.isRequired,
-  active: PropTypes.bool.isRequired,
-  update: PropTypes.func.isRequired,
-  count: PropTypes.number,
-  children: PropTypes.string.isRequired,
-};
