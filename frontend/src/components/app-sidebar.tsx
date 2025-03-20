@@ -1,9 +1,7 @@
 import * as React from "react";
 import {
-  IconDashboard,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
   IconSettings,
 } from "@tabler/icons-react";
 
@@ -19,34 +17,35 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { LayoutDashboardIcon } from "lucide-react";
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "user",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
       title: "Shows",
-      url: "#",
-      icon: IconDashboard,
+      url: "/shows",
+      icon: LayoutDashboardIcon,
     },
     {
       title: "Movies",
-      url: "#",
-      icon: IconListDetails,
+      url: "/movies",
+      icon: LayoutDashboardIcon,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: IconSettings,
     },
     {
       title: "Get Help",
-      url: "#",
+      url: "/help",
       icon: IconHelp,
     },
   ],

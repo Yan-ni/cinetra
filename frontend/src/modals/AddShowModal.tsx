@@ -17,18 +17,18 @@ import useDebounce from "@/hooks/use-debounce";
 import { ShowType } from "@/types";
 
 interface AddShowModalProps {
-    modalStatus: boolean;
-    setModalStatus: (value: boolean) => void;
-    shows: ShowType[];
-    setShows: (value: ShowType[]) => void;
-    type: "show" | "movie";
+  modalStatus: boolean;
+  setModalStatus: (value: boolean) => void;
+  shows: ShowType[];
+  setShows: (value: ShowType[]) => void;
+  type: "show" | "movie";
 }
 
 interface FoundShow {
-    show_id: number;
-    name: string;
-    overview: string;
-    posterURL: string;
+  show_id: number;
+  name: string;
+  overview: string;
+  posterURL: string;
 }
 
 export default function AddShowModal({
@@ -85,16 +85,18 @@ export default function AddShowModal({
       });
   };
 
-  const filterAndMapSearchResult = (searchResult: FoundShow[]): JSX.Element[] => {
+  const filterAndMapSearchResult = (
+    searchResult: FoundShow[],
+  ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
     // Time complexity: O(n)
     searchResult.forEach(({ show_id, name, overview, posterURL }, index) => {
       if (
         name &&
-                overview &&
-                posterURL &&
-                !shows.find((show) => show.show_id === show_id)
+        overview &&
+        posterURL &&
+        !shows.find((show) => show.show_id === show_id)
       ) {
         result.push(
           <li
@@ -131,11 +133,12 @@ export default function AddShowModal({
     if (!debouncedSearchTerm) {
       setSearchResult([]);
       return;
-    }
-    else {
+    } else {
       axios
         .get(
-          `${import.meta.env.VITE_API_PATH || ""}/search/${type}?q=${debouncedSearchTerm}`,
+          `${
+            import.meta.env.VITE_API_PATH || ""
+          }/search/${type}?q=${debouncedSearchTerm}`,
         )
         .then((res) => {
           console.log(res.data);
@@ -153,75 +156,100 @@ export default function AddShowModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a {type}</DialogTitle>
-          <DialogDescription>Add the {type} you watched and keep track of it.</DialogDescription>
+          <DialogDescription>
+            Add the {type} you watched and keep track of it.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <Label htmlFor="searchInput">Search the {type} you want to add</Label>
-          <Input
-            id="searchInput"
-            placeholder={`Search ${type}...`}
-            value={searchTerm}
-            onChange={e => setSearch(e.target.value)}
-          />
-          {searchResult.length > 0 &&
-                        <ScrollArea className="h-[200px] w-full rounded-md border">
-                          <ul className="p-2">
-                            {filterAndMapSearchResult(searchResult)}
-                          </ul>
-                        </ScrollArea>
-          }
-
-
-          <div className="input-group">
-            <Label htmlFor="name">name</Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Search Section */}
+          <div className="space-y-1">
+            <Label htmlFor="searchInput" className="text-sm font-medium">
+              Search the {type} you want to add
+            </Label>
             <Input
-              id="name"
-              name="name"
-              type="text"
-              value={show.name}
-              required
-              readOnly
+              id="searchInput"
+              placeholder={`Search ${type}...`}
+              value={searchTerm}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-md"
             />
+            {searchResult.length > 0 && (
+              <ScrollArea className="h-[200px] w-full rounded-md border">
+                <ul className="p-2 space-y-1">
+                  {filterAndMapSearchResult(searchResult).map((item, index) => (
+                    <li
+                      key={index}
+                      className="px-2 py-1 text-sm hover:bg-muted rounded cursor-pointer"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </ScrollArea>
+            )}
           </div>
 
-          <div className="input-group">
-            <Label htmlFor="overview">overview</Label>
-            <Textarea
-              id="overview"
-              name="overview"
-              rows={3}
-              value={show.overview}
-              required
-              readOnly
-            />
+          {/* Form Fields */}
+          <div className="space-y-2">
+            <div className="space-y-1">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Name
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={show.name}
+                required
+                readOnly
+                className="w-full rounded-md bg-muted text-muted-foreground cursor-not-allowed"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="overview" className="text-sm font-medium">
+                Overview
+              </Label>
+              <Textarea
+                id="overview"
+                name="overview"
+                rows={3}
+                value={show.overview}
+                required
+                readOnly
+                className="w-full rounded-md bg-muted text-muted-foreground cursor-not-allowed resize-none"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="posterURL" className="text-sm font-medium">
+                Poster URL
+              </Label>
+              <Input
+                id="posterURL"
+                name="posterURL"
+                type="text"
+                value={show.posterURL}
+                required
+                readOnly
+                className="w-full rounded-md bg-muted text-muted-foreground cursor-not-allowed"
+              />
+            </div>
           </div>
 
-          <div className="input-group">
-            <Label htmlFor="posterURL">poster URL</Label>
-            <Input
-              id="posterURL"
-              name="posterURL"
-              type="text"
-              value={show.posterURL}
-              required
-              readOnly
-            />
-          </div>
-
-          <DialogFooter>
+          {/* Footer Buttons */}
+          <DialogFooter className="flex justify-end gap-2">
             <Button
-              className="bg-gray-500"
+              variant="outline"
               type="button"
               onClick={() => closeModal()}
             >
-                            cancel
+              Cancel
             </Button>
-            <Button className="btn-primary inline-block ml-1" type="submit">
-                            Add
-            </Button>
+            <Button type="submit">Add</Button>
           </DialogFooter>
         </form>
       </DialogContent>
-    </Dialog >
+    </Dialog>
   );
 }

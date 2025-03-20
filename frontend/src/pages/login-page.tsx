@@ -2,19 +2,22 @@ import { LoginForm } from "@/components/login-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function LoginScreen() {
+export default function LoginPage() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (credentials: { username: string; password: string }) => {
-    await axios.post(
-      `${import.meta.env.VITE_API_PATH || ""}/login`,
-      credentials,
-    ).then((response) => {
-      localStorage.setItem("Authorization", `Bearer ${response.data}`);
-      navigate("/");
-    }).catch(() => {
-      console.error("an error uccured during login");
-    });
+  const handleSubmit = async (credentials: {
+    username: string;
+    password: string;
+  }) => {
+    await axios
+      .post(`${import.meta.env.VITE_API_PATH || ""}/login`, credentials)
+      .then((response) => {
+        localStorage.setItem("Authorization", `Bearer ${response.data}`);
+        navigate("/");
+      })
+      .catch(() => {
+        console.error("an error uccured during login");
+      });
   };
 
   return (

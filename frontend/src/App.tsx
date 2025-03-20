@@ -1,36 +1,42 @@
-import "./assets/css/App.css";
-
-import { FC } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { FC } from "react";
 import { useAuth } from "./hooks/use-auth.tsx";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
-import ShowsScreen from "./Screens/shows-screen.tsx";
-import MovieScreen from "./Screens/MovieScreen.tsx";
-import LoginScreen from "./Screens/login-screen.tsx";
+import ShowsPage from "./pages/shows-page.tsx";
+// import MovieScreen from "./pages/Movies-page.tsx";
+import LoginPage from "./pages/login-page.tsx";
 import { AuthProvider } from "./context/auth-context.tsx";
+import HomePage from "./pages/home-page.tsx";
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "/shows",
+        element: <ShowsPage />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+]);
 
 const App: FC = () => {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/shows" replace />} />
-          <Route path="/shows" element={
-            <ProtectedRoute>
-              <ShowsScreen />
-            </ProtectedRoute>
-          } />
-          <Route path="/movies" element={
-            <ProtectedRoute>
-              <MovieScreen />
-            </ProtectedRoute>
-          } />
-          <Route path="/login" element={
-            <LoginScreen />
-          } />
-        </Routes>
-      </BrowserRouter >
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 };

@@ -2,14 +2,14 @@ import { ShowType } from "@/types";
 import axios from "axios";
 
 interface ShowProps {
-    _id: string;
-    name: string;
-    favorite: boolean;
-    posterURL: string;
-    setSelectedShow: React.Dispatch<React.SetStateAction<string>>;
-    shows: ShowType[];
-    setShows: React.Dispatch<React.SetStateAction<ShowType[]>>;
-    type: "show" | "movie";
+  _id: string;
+  name: string;
+  favorite: boolean;
+  posterURL: string;
+  setSelectedShow: React.Dispatch<React.SetStateAction<string>>;
+  shows: ShowType[];
+  setShows: React.Dispatch<React.SetStateAction<ShowType[]>>;
+  type: "show" | "movie";
 }
 
 export default function Show({
@@ -43,10 +43,13 @@ export default function Show({
   };
 
   return (
-    <div className="show" onClick={() => setSelectedShow(_id)}>
+    <div
+      className="aspect-[2/3] relative cursor-pointer rounded-md overflow-hidden"
+      onClick={() => setSelectedShow(_id)}
+    >
       <img className="w-full h-full object-cover" src={posterURL} alt="" />
       <svg
-        className="heart"
+        className="w-6 aspect-square absolute top-1 right-1"
         viewBox="0 0 24 24"
         fill={favorite ? "#ff0000" : "#ffffff60"}
         xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +68,13 @@ export default function Show({
           strokeLinejoin="round"
         />
       </svg>
-      <h2 className="mb-3" title={name}>{name}</h2>
+      <h2
+        className="mb-3 w-[12ch] text-white text-base font-normal absolute bottom-0 left-2 z-10 whitespace-nowrap overflow-hidden text-ellipsis"
+        title={name}
+      >
+        {name}
+      </h2>
+      <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
     </div>
   );
 }
