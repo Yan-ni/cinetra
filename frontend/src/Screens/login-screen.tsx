@@ -5,21 +5,18 @@ import axios from "axios";
 export default function LoginScreen() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (credentials: {username: string; password: string}) => {
-    try {
-      let response = await axios.post(
-        `${import.meta.env.VITE_API_PATH || ""}/login`,
-        credentials
-      );
-
-      console.log(`Bearer ${response.data}`);
+  const handleSubmit = async (credentials: { username: string; password: string }) => {
+    await axios.post(
+      `${import.meta.env.VITE_API_PATH || ""}/login`,
+      credentials,
+    ).then((response) => {
       localStorage.setItem("Authorization", `Bearer ${response.data}`);
       navigate("/");
-    } catch (error) {
+    }).catch(() => {
       console.error("an error uccured during login");
-    }
+    });
   };
-  
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -30,7 +27,7 @@ export default function LoginScreen() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm onSubmit={handleSubmit} />
+            <LoginForm handleSubmit={handleSubmit} />
           </div>
         </div>
       </div>
@@ -42,5 +39,5 @@ export default function LoginScreen() {
         />
       </div>
     </div>
-  )
+  );
 }

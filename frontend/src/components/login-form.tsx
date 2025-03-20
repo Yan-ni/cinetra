@@ -4,18 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
-// Optional: Define props if you want the parent to handle submission
 interface LoginFormProps extends React.ComponentProps<"form"> {
-  onSubmit?: (data: { username: string; password: string }) => void;
+  handleSubmit?: (credentials: { username: string; password: string }) => void;
 }
 
-export function LoginForm({ className, onSubmit, ...props }: LoginFormProps) {
+export function LoginForm({ className, handleSubmit: onSubmit, ...props }: LoginFormProps) {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
-  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -24,7 +22,6 @@ export function LoginForm({ className, onSubmit, ...props }: LoginFormProps) {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -82,7 +79,7 @@ export function LoginForm({ className, onSubmit, ...props }: LoginFormProps) {
         </Button>
       </div>
       <div className="text-center text-sm">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <a href="/signup" className="underline underline-offset-4">
           Sign up
         </a>

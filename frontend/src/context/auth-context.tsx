@@ -5,15 +5,15 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({
-    isAuthenticated: false,
+  isAuthenticated: false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const authValue = {
-        isAuthenticated: localStorage.getItem('Authorization') !== undefined,
-    };
+  const authValue = {
+    isAuthenticated: localStorage.getItem('Authorization') !== undefined,
+  };
 
-    return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
 }
 
 export { AuthContext };

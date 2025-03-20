@@ -22,7 +22,7 @@ function ShowScreen() {
     const loadShows = async () => {
       try {
         const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/movie`
+          `${import.meta.env.VITE_API_PATH || ""}/movie`,
         );
 
         if (result.status === 200 && Array.isArray(result.data))
