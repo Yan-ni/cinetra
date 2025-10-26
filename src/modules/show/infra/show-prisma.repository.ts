@@ -29,6 +29,23 @@ export class ShowPrismaRepository implements ShowRepository {
     return newShow;
   }
 
+  async update(showId: string, showData: any, userId: string): Promise<any> {
+    // First check if the show exists and belongs to the user
+    const existingShow = await this.prisma.show.findFirst({
+      where: { id: showId, userId: userId }
+    });
+
+    if (!existingShow) {
+      return null;
+    }
+
+    const updatedShow = await this.prisma.show.update({
+      where: { id: showId },
+      data: showData
+    });
+    return updatedShow;
+  }
+
   async delete(showId: string, userId: string): Promise<any> {
     const show = await this.prisma.show.deleteMany({
       where: { id: showId, userId: userId }

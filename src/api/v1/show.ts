@@ -33,6 +33,29 @@ router.post("/", async (req: Request<{}, {}, CreateShowDto>, res: Response) => {
   res.status(201).json(await showModule.Commands.CreateCommand.execute(showData, req.user.id));
 });
 
+interface UpdateShowDto {
+  name?: string;
+  overview?: string;
+  posterURL?: string;
+  seasonsWatched?: number;
+  episodesWatched?: number;
+  completed?: boolean;
+  favorite?: boolean;
+  showId?: string;
+}
+
+router.put("/:id", async (req: Request<{id: string}, {}, UpdateShowDto>, res: Response) => {
+  const showId = req.params.id;
+  const showData = req.body;
+  const result = await showModule.Commands.UpdateCommand.execute(showId, showData, req.user.id);
+  
+  if (!result) {
+    res.status(404).json({ message: "Show not found or you don't have permission to update it" });
+  } else {
+    res.status(200).json(result);
+  }
+});
+
 router.delete("/:id", async (req: Request<{id: string}>, res: Response) => {
   const showId = req.params.id;
   const result = await showModule.Commands.DeleteCommand.execute(showId, req.user.id);
