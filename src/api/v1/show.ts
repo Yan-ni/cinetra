@@ -33,6 +33,17 @@ router.post("/", async (req: Request<{}, {}, CreateShowDto>, res: Response) => {
   res.status(201).json(await showModule.Commands.CreateCommand.execute(showData, req.user.id));
 });
 
+router.delete("/:id", async (req: Request<{id: string}>, res: Response) => {
+  const showId = req.params.id;
+  const result = await showModule.Commands.DeleteCommand.execute(showId, req.user.id);
+  
+  if (result.count === 0) {
+    res.status(404).json({ message: "Show not found or you don't have permission to delete it" });
+  } else {
+    res.status(200).json({ message: "Show deleted successfully", result });
+  }
+});
+
 
 // router.put("/show/:id", protectedRoute, showController.put);
 // router.delete("/show/:id", protectedRoute, showController.delete);

@@ -28,4 +28,11 @@ export class ShowPrismaRepository implements ShowRepository {
     });
     return newShow;
   }
+
+  async delete(showId: string, userId: string): Promise<any> {
+    const show = await this.prisma.show.deleteMany({
+      where: { id: showId, userId: userId }
+    });
+    return show;
+  }
 }
