@@ -3,6 +3,18 @@ import { movieModule } from '../../modules/movie';
 
 const router = Router();
 
+router.get("/search", async (req: Request, res: Response) => {
+  const query = req.query.q as string;
+  
+  try {
+    const results = await movieModule.Queries.SearchQuery.execute(query);
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 router.get("/:id", async (req: Request<{id: string}>, res: Response) => {
   const movieId = req.params.id;
 

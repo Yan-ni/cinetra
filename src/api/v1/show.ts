@@ -3,6 +3,13 @@ import { showModule } from '../../modules/show';
 
 const router = Router();
 
+router.get("/search", async (req: Request, res: Response) => {
+  const query = req.query.q as string;
+  
+  const results = await showModule.Queries.SearchQuery.execute(query);
+  res.json(results);
+});
+
 router.get("/{:id}", async (req: Request<{id: string}>, res: Response) => {
   console.log("GET /show/:id called");
   const showId = req.params.id;
@@ -66,9 +73,5 @@ router.delete("/:id", async (req: Request<{id: string}>, res: Response) => {
     res.status(200).json({ message: "Show deleted successfully", result });
   }
 });
-
-
-// router.put("/show/:id", protectedRoute, showController.put);
-// router.delete("/show/:id", protectedRoute, showController.delete);
 
 export default router;
