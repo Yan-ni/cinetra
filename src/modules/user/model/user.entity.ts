@@ -1,10 +1,21 @@
 
-export class User {
+export interface User {
+  id: string;
+  email: string;
   username: string;
   password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
-  }
+export interface CreateUserDto {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface UpdateUserDto {
+  email?: string;
+  username?: string;
+  password?: string;
 }

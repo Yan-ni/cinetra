@@ -1,4 +1,5 @@
 import { ShowRepository } from "../model/show.repository";
+import { Show, CreateShowDto, UpdateShowDto } from "../model/show.entity";
 import { PrismaClient } from '../../../../generated/prisma/client';
 
 export class ShowPrismaRepository implements ShowRepository {
@@ -8,28 +9,28 @@ export class ShowPrismaRepository implements ShowRepository {
     this.prisma = new PrismaClient();
   }
 
-  async findById(showId: string, userId: string): Promise<any> {
+  async findById(showId: string, userId: string): Promise<Show | null> {
     const show = await this.prisma.show.findUnique({
       where: { id: showId, userId: userId }
     });
     return show;
   }
 
-  async findAll(userId: string): Promise<any[]> {
+  async findAll(userId: string): Promise<Show[]> {
     const shows = await this.prisma.show.findMany({
       where: { userId: userId }
     });
     return shows;
   }
 
-  async create(showData: any, userId: string): Promise<any> {
+  async create(showData: CreateShowDto, userId: string): Promise<Show> {
     const newShow = await this.prisma.show.create({
       data: {...showData, userId: userId}
     });
     return newShow;
   }
 
-  async update(showId: string, showData: any, userId: string): Promise<any> {
+  async update(showId: string, showData: UpdateShowDto, userId: string): Promise<Show | null> {
     // First check if the show exists and belongs to the user
     const existingShow = await this.prisma.show.findFirst({
       where: { id: showId, userId: userId }
@@ -46,7 +47,7 @@ export class ShowPrismaRepository implements ShowRepository {
     return updatedShow;
   }
 
-  async delete(showId: string, userId: string): Promise<any> {
+  async delete(showId: string, userId: string): Promise<{ count: number }> {
     const show = await this.prisma.show.deleteMany({
       where: { id: showId, userId: userId }
     });

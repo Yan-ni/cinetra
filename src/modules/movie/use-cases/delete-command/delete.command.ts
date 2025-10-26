@@ -7,7 +7,7 @@ export class DeleteCommand {
     this.movieRepository = movieRepository;
   }
 
-  async execute(movieId: string, userId: string) {
+  async execute(movieId: string, userId: string): Promise<{ count: number }> {
     return await this.movieRepository.delete(movieId, userId);
   }
 }

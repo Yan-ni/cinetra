@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { movieModule } from '../../modules/movie';
+import { CreateMovieDto, UpdateMovieDto } from '../../modules/movie/model/movie.entity';
 
 const router = Router();
 
@@ -39,14 +40,6 @@ router.get("/", async (req: Request, res: Response) => {
   res.json(movies);
 });
 
-interface CreateMovieDto {
-  name: string;
-  overview?: string;
-  posterURL?: string;
-  favorite?: boolean;
-  showId?: number;
-}
-
 router.post("/", async (req: Request<{}, {}, CreateMovieDto>, res: Response) => {
   const movieData = req.body;
   
@@ -62,14 +55,6 @@ router.post("/", async (req: Request<{}, {}, CreateMovieDto>, res: Response) => 
     }
   }
 });
-
-interface UpdateMovieDto {
-  name?: string;
-  overview?: string;
-  posterURL?: string;
-  favorite?: boolean;
-  showId?: number;
-}
 
 router.put("/:id", async (req: Request<{id: string}, {}, UpdateMovieDto>, res: Response) => {
   const movieId = req.params.id;

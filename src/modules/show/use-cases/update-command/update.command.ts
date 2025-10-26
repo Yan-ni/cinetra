@@ -1,15 +1,5 @@
 import { ShowRepository } from "../../model/show.repository";
-
-interface UpdateShowDto {
-  name?: string;
-  overview?: string;
-  posterURL?: string;
-  seasonsWatched?: number;
-  episodesWatched?: number;
-  completed?: boolean;
-  favorite?: boolean;
-  showId?: string;
-}
+import { Show, UpdateShowDto } from "../../model/show.entity";
 
 export class UpdateCommand {
   private showRepository: ShowRepository
@@ -18,7 +8,7 @@ export class UpdateCommand {
     this.showRepository = showRepository;
   }
 
-  async execute(showId: string, showData: UpdateShowDto, userId: string) {
+  async execute(showId: string, showData: UpdateShowDto, userId: string): Promise<Show | null> {
     return await this.showRepository.update(showId, showData, userId);
   }
 }

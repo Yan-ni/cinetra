@@ -1,12 +1,5 @@
 import { MovieRepository } from "../../model/movie.repository";
-
-interface CreateMovieDto {
-  name: string;
-  overview?: string;
-  posterURL?: string;
-  favorite?: boolean;
-  showId?: number;
-}
+import { Movie, CreateMovieDto } from "../../model/movie.entity";
 
 export class CreateCommand {
   private movieRepository: MovieRepository
@@ -15,7 +8,7 @@ export class CreateCommand {
     this.movieRepository = movieRepository;
   }
 
-  async execute(movieData: CreateMovieDto, userId: string) {
+  async execute(movieData: CreateMovieDto, userId: string): Promise<Movie> {
     // Check if movie with same showId already exists for this user
     if (movieData.showId) {
       const existingMovie = await this.movieRepository.findByShowId(movieData.showId, userId);

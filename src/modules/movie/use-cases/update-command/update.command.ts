@@ -1,12 +1,5 @@
 import { MovieRepository } from "../../model/movie.repository";
-
-interface UpdateMovieDto {
-  name?: string;
-  overview?: string;
-  posterURL?: string;
-  favorite?: boolean;
-  showId?: number;
-}
+import { Movie, UpdateMovieDto } from "../../model/movie.entity";
 
 export class UpdateCommand {
   private movieRepository: MovieRepository
@@ -15,7 +8,7 @@ export class UpdateCommand {
     this.movieRepository = movieRepository;
   }
 
-  async execute(movieId: string, movieData: UpdateMovieDto, userId: string) {
+  async execute(movieId: string, movieData: UpdateMovieDto, userId: string): Promise<Movie | null> {
     return await this.movieRepository.update(movieId, movieData, userId);
   }
 }

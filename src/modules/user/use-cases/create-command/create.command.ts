@@ -1,4 +1,5 @@
 import { UserRepository } from "../../model/user.repository";
+import { User, CreateUserDto } from "../../model/user.entity";
 
 export class CreateCommand {
   private userRepository: UserRepository;
@@ -7,7 +8,7 @@ export class CreateCommand {
     this.userRepository = userRepository;
   }
 
-  async execute(userData: {username: string; email: string; password: string}) {
+  async execute(userData: CreateUserDto): Promise<User> {
     return this.userRepository.create(userData);
   }
 }

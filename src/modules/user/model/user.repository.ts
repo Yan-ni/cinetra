@@ -1,9 +1,10 @@
-
+import { User, CreateUserDto, UpdateUserDto } from './user.entity';
 
 export interface UserRepository {
-  findAll(): Promise<any[]>;
-  findById(id: string): Promise<any | null>;
-  create(data: any): Promise<any>;
-  update(id: string, data: any): Promise<any>;
+  findAll(): Promise<User[]>;
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  create(data: CreateUserDto): Promise<User>;
+  update(id: string, data: UpdateUserDto): Promise<User>;
   delete(id: string): Promise<void>;
 }

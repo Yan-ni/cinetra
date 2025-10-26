@@ -1,17 +1,5 @@
 import { ShowRepository } from "../../model/show.repository";
-
-
-interface CreateShowDto {
-  name: string;
-  overview?: string;
-  posterURL?: string;
-  seasonsWatched?: number;
-  episodesWatched?: number;
-  completed?: boolean;
-  favorite?: boolean;
-  userId?: string;
-  showId?: string;
-}
+import { Show, CreateShowDto } from "../../model/show.entity";
 
 export class CreateCommand {
   private showRepository: ShowRepository
@@ -20,7 +8,7 @@ export class CreateCommand {
     this.showRepository = showRepository;
   }
 
-  async execute(showData: CreateShowDto, userId: string) {
+  async execute(showData: CreateShowDto, userId: string): Promise<Show> {
     return await this.showRepository.create(showData, userId);
   }
 }

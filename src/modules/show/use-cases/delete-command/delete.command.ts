@@ -7,7 +7,7 @@ export class DeleteCommand {
     this.showRepository = showRepository;
   }
 
-  async execute(showId: string, userId: string) {
+  async execute(showId: string, userId: string): Promise<{ count: number }> {
     return await this.showRepository.delete(showId, userId);
   }
 }

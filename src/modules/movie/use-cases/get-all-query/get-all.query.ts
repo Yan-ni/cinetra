@@ -1,4 +1,5 @@
 import { MovieRepository } from '../../model/movie.repository';
+import { Movie } from '../../model/movie.entity';
 
 export class GetAllQuery {
   private movieRepository: MovieRepository;
@@ -7,7 +8,7 @@ export class GetAllQuery {
     this.movieRepository = movieRepository;
   }
 
-  async execute(userId: string) {
+  async execute(userId: string): Promise<Movie[]> {
     const movies = await this.movieRepository.findAll(userId);
     return movies;
   }

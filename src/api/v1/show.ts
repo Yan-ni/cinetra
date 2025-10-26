@@ -1,13 +1,19 @@
 import { Router, Request, Response } from "express";
 import { showModule } from '../../modules/show';
+import { CreateShowDto, UpdateShowDto } from '../../modules/show/model/show.entity';
 
 const router = Router();
 
 router.get("/search", async (req: Request, res: Response) => {
   const query = req.query.q as string;
   
-  const results = await showModule.Queries.SearchQuery.execute(query);
-  res.json(results);
+  try {
+    const results = await showModule.Queries.SearchQuery.execute(query);
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 router.get("/{:id}", async (req: Request<{id: string}>, res: Response) => {
@@ -24,32 +30,10 @@ router.get("/{:id}", async (req: Request<{id: string}>, res: Response) => {
   res.json(shows);
 });
 
-interface CreateShowDto {
-  name: string;
-  overview?: string;
-  posterURL?: string;
-  seasonsWatched?: number;
-  episodesWatched?: number;
-  completed?: boolean;
-  favorite?: boolean;
-  showId?: string;
-}
-
 router.post("/", async (req: Request<{}, {}, CreateShowDto>, res: Response) => {
   const showData = req.body;
   res.status(201).json(await showModule.Commands.CreateCommand.execute(showData, req.user.id));
 });
-
-interface UpdateShowDto {
-  name?: string;
-  overview?: string;
-  posterURL?: string;
-  seasonsWatched?: number;
-  episodesWatched?: number;
-  completed?: boolean;
-  favorite?: boolean;
-  showId?: string;
-}
 
 router.put("/:id", async (req: Request<{id: string}, {}, UpdateShowDto>, res: Response) => {
   const showId = req.params.id;
