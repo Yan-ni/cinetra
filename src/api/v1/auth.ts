@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { userModule } from '../user';
-import { securityModule } from '../security';
+import { userModule } from '../../modules/user';
+import { securityModule } from '../../modules/security';
 
 const router = Router();
 

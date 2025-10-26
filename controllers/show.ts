@@ -2,46 +2,6 @@ import { Request, Response } from "express";
 import Show from "../models/Show";
 
 export default {
-  get: async (req: Request, res: Response) => {
-    const showId = req.params.id;
-    try {
-      if (showId) {
-        const show = await Show.findOne({
-          _id: showId,
-          user_id: req.user.id,
-        });
-
-        res.json(show);
-      } else {
-        const shows = await Show.find({ user_id: req.user.id }).sort({
-          updatedAt: -1,
-        });
-        res.json(shows);
-      }
-    } catch (error) {
-      console.error(error);
-      res.sendStatus(500);
-    }
-  },
-  post: async (req: Request, res: Response) => {
-    try {
-      const exists = await Show.findOne({
-        show_id: req.body?.show_id,
-        user_id: req.user.id,
-      });
-
-      if (exists) {
-        res.sendStatus(409);
-      } else {
-        const show = await Show.create({ ...req.body, user_id: req.user.id });
-
-        res.status(201).json(show);
-      }
-    } catch (error) {
-      console.error(error);
-      res.sendStatus(500);
-    }
-  },
   put: async (req: Request, res: Response) => {
     /** We allow an update on the following fields :
      * seasonsWatched

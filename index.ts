@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import path from "path";
 import morgan from "morgan";
+import apiRoutes from "./src/api/v1";
 
 const app = express();
 
@@ -12,22 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("combined"));
 
-// setup routes
-import {
-  searchRouter,
-  showRouter,
-  movieRouter,
-} from "./routes";
-
-import authenticationRouter from "./src/authentication/router";
-import userRouter from "./src/user/router";
-import { protectedRoute } from "./src/middlewares/protectedRoute";
-
-app.use("/api/auth", authenticationRouter);
-app.use("/api/user", protectedRoute, userRouter);
-app.use(searchRouter);
-app.use(showRouter);
-app.use(movieRouter);
+// api routes
+app.use("/api/v1", apiRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "..", "frontend", "dist")));
