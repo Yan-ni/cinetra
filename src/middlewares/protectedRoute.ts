@@ -1,5 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import { securityModule } from '../security';
+import { securityModule } from '../modules/security';
+
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
+    }
+    interface Request {
+      user: User;
+    }
+  }
+}
 
 export function protectedRoute(req: Request, res: Response, next: NextFunction): undefined {
   const Authorization = req.get("Authorization");
