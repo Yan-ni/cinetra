@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Show" ALTER COLUMN "overview" DROP NOT NULL,
+ALTER COLUMN "posterURL" DROP NOT NULL;
