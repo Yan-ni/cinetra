@@ -24,7 +24,7 @@ export default function Show({
 }: ShowProps) {
   const toggleFavorite = async (id: string, favorite: boolean) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/show/${id}`, {
+      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${id}`, {
         favorite: !favorite,
       });
 
