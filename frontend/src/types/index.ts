@@ -1,5 +1,5 @@
 export interface ShowType {
-    _id: string;
+    id: string;
     name: string;
     overview: string;
     posterURL: string;
@@ -7,6 +7,8 @@ export interface ShowType {
     episodesWatched: number;
     completed: boolean;
     favorite: boolean;
-    user_id: string;
-    show_id: number;
+    userId: string;
+    showId: number;
+    createdAt: string;
+    updatedAt: string;
 }

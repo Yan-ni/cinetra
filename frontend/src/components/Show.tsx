@@ -2,7 +2,7 @@ import { ShowType } from "@/types";
 import axios from "axios";
 
 interface ShowProps {
-  _id: string;
+  id: string;
   name: string;
   favorite: boolean;
   posterURL: string;
@@ -13,7 +13,7 @@ interface ShowProps {
 }
 
 export default function Show({
-  _id,
+  id,
   name,
   favorite,
   posterURL,
@@ -22,16 +22,16 @@ export default function Show({
   setShows,
   type,
 }: ShowProps) {
-  const toggleFavorite = async (_id: string, favorite: boolean) => {
+  const toggleFavorite = async (id: string, favorite: boolean) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/${type}/${_id}`, {
+      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/show/${id}`, {
         favorite: !favorite,
       });
 
       // TODO: check response status
       setShows(
         shows.map((show) => {
-          if (show._id !== _id) return show;
+          if (show.id !== id) return show;
 
           return { ...show, favorite: !favorite };
         }),
@@ -45,7 +45,7 @@ export default function Show({
   return (
     <div
       className="aspect-[2/3] relative cursor-pointer rounded-md overflow-hidden"
-      onClick={() => setSelectedShow(_id)}
+      onClick={() => setSelectedShow(id)}
     >
       <img className="w-full h-full object-cover" src={posterURL} alt="" />
       <svg
@@ -55,7 +55,7 @@ export default function Show({
         xmlns="http://www.w3.org/2000/svg"
         onClick={(e) => {
           e.stopPropagation();
-          toggleFavorite(_id, favorite);
+          toggleFavorite(id, favorite);
         }}
       >
         <path

@@ -39,7 +39,7 @@ export default function ShowsPage() {
     const loadShows = async () => {
       try {
         const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/show`,
+          `${import.meta.env.VITE_API_PATH || ""}/api/v1/show`,
         );
 
         if (result.status === 200 && Array.isArray(result.data))
@@ -81,7 +81,6 @@ export default function ShowsPage() {
             className="w-64 px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
           <AddShowModal
-            type="show"
             modalStatus={addShowModalStatus}
             setModalStatus={setAddShowModalStatus}
             shows={shows}
@@ -194,7 +193,7 @@ export default function ShowsPage() {
           .map((show) => (
             <Show
               type="show"
-              key={show._id}
+              key={show.id}
               {...show}
               shows={shows}
               setShows={setShows}

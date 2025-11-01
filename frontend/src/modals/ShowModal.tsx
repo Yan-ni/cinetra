@@ -27,7 +27,7 @@ export default function ShowModal({
   type,
 }: ShowModalProps) {
   const [show, setShow] = useState<ShowType>({
-    _id: "",
+    id: "",
     name: "",
     overview: "",
     posterURL: "",
@@ -35,8 +35,10 @@ export default function ShowModal({
     episodesWatched: 0,
     completed: false,
     favorite: false,
-    user_id: "",
-    show_id: 0,
+    userId: "",
+    showId: 0,
+    updatedAt: "",
+    createdAt: "",
   });
   const [overviewCollapsed, setOverviewCollapsed] = useState(true);
 
@@ -61,7 +63,7 @@ export default function ShowModal({
 
     await axios
       .put(
-        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`,
+        `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
         payload,
       )
       .then((response) => {
@@ -92,14 +94,14 @@ export default function ShowModal({
   const toggleComplete = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_PATH || ""}/show/${selectedShow}`,
+        `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
         {
           completed: !show.completed,
         },
       );
       setShows(
         shows.map<ShowType>((s) => {
-          if (s.show_id === show.show_id) {
+          if (s.showId === show.showId) {
             return {
               ...show,
               completed: !show.completed,
@@ -128,12 +130,12 @@ export default function ShowModal({
     const loadShow = async () => {
       try {
         const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/${type}/${selectedShow}`,
+          `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
         );
 
         setShow(result.data);
       } catch (error) {
-        console.error(`error occurred loading the ${type}`);
+        console.error(`error occurred loading the show`);
         if (import.meta.env.DEV) console.error(error);
       }
     };
@@ -152,17 +154,7 @@ export default function ShowModal({
             overviewCollapsed ? "line-clamp-3" : "inline"
           }`}
         >
-          {show.overview}{" "}
-          <a
-            href=""
-            className="text-blue-600"
-            onClick={(e) => {
-              e.preventDefault();
-              setOverviewCollapsed(!overviewCollapsed);
-            }}
-          >
-            read {overviewCollapsed ? "more" : "less"}
-          </a>
+          {show.overview}
         </p>
 
         <Button
@@ -171,13 +163,11 @@ export default function ShowModal({
             if (window.confirm("are you sure you want to delete this show ?")) {
               axios
                 .delete(
-                  `${
-                    import.meta.env.VITE_API_PATH || ""
-                  }/${type}/${selectedShow}`,
+                  `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
                 )
                 .then((res) => {
                   if (res.status === 200) {
-                    setShows(shows.filter((show) => show._id !== selectedShow));
+                    setShows(shows.filter((show) => show.id !== selectedShow));
                     closeModal();
                   }
                 });

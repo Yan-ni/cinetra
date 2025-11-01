@@ -21,11 +21,10 @@ interface AddShowModalProps {
   setModalStatus: (value: boolean) => void;
   shows: ShowType[];
   setShows: (value: ShowType[]) => void;
-  type: "show" | "movie";
 }
 
 interface FoundShow {
-  show_id: number;
+  showId: number;
   name: string;
   overview: string;
   posterURL: string;
@@ -36,14 +35,13 @@ export default function AddShowModal({
   setModalStatus,
   shows,
   setShows,
-  type,
 }: AddShowModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [searchResult, setSearchResult] = useState([]);
 
   const [show, setShow] = useState<FoundShow>({
-    show_id: 0,
+    showId: 0,
     name: "",
     overview: "",
     posterURL: "",
@@ -54,7 +52,7 @@ export default function AddShowModal({
     setSearch("");
     setSearchResult([]);
     setShow({
-      show_id: 0,
+      showId: 0,
       name: "",
       overview: "",
       posterURL: "",
@@ -69,7 +67,7 @@ export default function AddShowModal({
     }
 
     axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/${type}`, show)
+      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/show`, show)
       .then((res) => {
         if (res.status === 201) setShows([res.data, ...shows]);
       })
@@ -77,7 +75,7 @@ export default function AddShowModal({
         console.error(err.response.status);
         if (err.response.status === 409)
           alert(
-            `the ${type} you're trying to add already exists in your list.`,
+            `the show you're trying to add already exists in your list.`,
           );
       })
       .finally(() => {
@@ -91,20 +89,20 @@ export default function AddShowModal({
     const result: JSX.Element[] = [];
 
     // Time complexity: O(n)
-    searchResult.forEach(({ show_id, name, overview, posterURL }, index) => {
+    searchResult.forEach(({ showId: showId, name, overview, posterURL }, index) => {
       if (
         name &&
         overview &&
         posterURL &&
-        !shows.find((show) => show.show_id === show_id)
+        !shows.find((show) => show.showId === showId)
       ) {
         result.push(
           <li
-            key={index} // Consider using show_id instead of index for stable keys
+            key={index} // Consider using showId instead of index for stable keys
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setShow({
-                show_id,
+                showId: showId,
                 name,
                 overview,
                 posterURL,
@@ -138,7 +136,7 @@ export default function AddShowModal({
         .get(
           `${
             import.meta.env.VITE_API_PATH || ""
-          }/search/${type}?q=${debouncedSearchTerm}`,
+          }/api/v1/show/search?q=${debouncedSearchTerm}`,
         )
         .then((res) => {
           console.log(res.data);
@@ -149,26 +147,26 @@ export default function AddShowModal({
             );
         });
     }
-  }, [debouncedSearchTerm, type]);
+  }, [debouncedSearchTerm]);
 
   return (
     <Dialog open={modalStatus} onOpenChange={setModalStatus}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a {type}</DialogTitle>
+          <DialogTitle>Add a show</DialogTitle>
           <DialogDescription>
-            Add the {type} you watched and keep track of it.
+            Add the show you watched and keep track of it.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Search Section */}
           <div className="space-y-1">
             <Label htmlFor="searchInput" className="text-sm font-medium">
-              Search the {type} you want to add
+              Search the show you want to add
             </Label>
             <Input
               id="searchInput"
-              placeholder={`Search ${type}...`}
+              placeholder={`Search show...`}
               value={searchTerm}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-md"
