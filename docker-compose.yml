@@ -1,14 +1,4 @@
 services:
-  mongodb:
-    container_name: cinetra-db
-    env_file: .env
-    image: mongo
-    volumes:
-      - dbdata:/data/db
-    ports:
-      - 27017:27017
-    restart: unless-stopped
-
   postgres:
     container_name: cinetra-postgres
     image: postgres:latest
