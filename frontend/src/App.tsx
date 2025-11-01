@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import ShowsPage from "./pages/shows-page.tsx";
-// import MovieScreen from "./pages/Movies-page.tsx";
+import MoviesPage from "./pages/Movies-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import SignupPage from "./pages/signup-page.tsx";
 import WelcomePage from "./pages/welcome-page.tsx";
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/shows",
         element: <ShowsPage />,
+      },
+      {
+        path: "/movies",
+        element: <MoviesPage />,
       },
     ],
   },
