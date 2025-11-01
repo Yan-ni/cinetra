@@ -10,6 +10,7 @@ import ShowsPage from "./pages/shows-page.tsx";
 // import MovieScreen from "./pages/Movies-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import SignupPage from "./pages/signup-page.tsx";
+import WelcomePage from "./pages/welcome-page.tsx";
 import { AuthProvider } from "./context/auth-context.tsx";
 import HomePage from "./pages/home-page.tsx";
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      {
+        index: true,
+        element: <WelcomePage />,
+      },
       {
         path: "/shows",
         element: <ShowsPage />,
