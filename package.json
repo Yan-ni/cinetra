@@ -8,7 +8,7 @@
     "build:back": "tsc",
     "build:all": "npm run build:back && npm run build:front",
     "start": "npm run build:all && node dist/index.js",
-    "dev": "tsc --watch & nodemon dist/index.js"
+    "dev": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "prisma": "^6.18.0",
+    "ts-node": "^10.9.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
