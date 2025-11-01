@@ -9,6 +9,7 @@ import {
 import ShowsPage from "./pages/shows-page.tsx";
 // import MovieScreen from "./pages/Movies-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
+import SignupPage from "./pages/signup-page.tsx";
 import { AuthProvider } from "./context/auth-context.tsx";
 import HomePage from "./pages/home-page.tsx";
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignupPage />,
   },
 ]);
 
