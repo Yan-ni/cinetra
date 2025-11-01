@@ -162,45 +162,76 @@ export default function ShowsPage() {
 
       <hr className="border-t border-gray-200 mb-6" />
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8  gap-4 w-full gap-1 mt-1">
-        {shows
-          ?.filter((show) => {
-            if (!show.name.toLowerCase().includes(search)) return false;
+      {(() => {
+        const filteredShows = shows?.filter((show) => {
+          if (!show.name.toLowerCase().includes(search)) return false;
 
-            if (filters.favoriteFilter === "favorite" && show.favorite !== true)
-              return false;
+          if (filters.favoriteFilter === "favorite" && show.favorite !== true)
+            return false;
 
-            if (
-              filters.favoriteFilter === "notFavorite" &&
-              show.favorite !== false
-            )
-              return false;
+          if (
+            filters.favoriteFilter === "notFavorite" &&
+            show.favorite !== false
+          )
+            return false;
 
-            if (
-              filters.completeFilter === "completed" &&
-              show.completed !== true
-            )
-              return false;
+          if (
+            filters.completeFilter === "completed" &&
+            show.completed !== true
+          )
+            return false;
 
-            if (
-              filters.completeFilter === "notCompleted" &&
-              show.completed !== false
-            )
-              return false;
+          if (
+            filters.completeFilter === "notCompleted" &&
+            show.completed !== false
+          )
+            return false;
 
-            return true;
-          })
-          .map((show) => (
-            <Show
-              type="show"
-              key={show.id}
-              {...show}
-              shows={shows}
-              setShows={setShows}
-              setSelectedShow={setSelectedShow}
-            />
-          ))}
-      </div>
+          return true;
+        });
+
+        if (filteredShows.length === 0) {
+          return (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <div className="text-center space-y-4">
+                <div className="text-6xl mb-4">📺</div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {shows.length === 0 ? "No shows yet" : "No shows found"}
+                </h3>
+                <p className="text-gray-500 max-w-md">
+                  {shows.length === 0
+                    ? "Start building your collection by adding your first show!"
+                    : "Try adjusting your search or filters to find what you're looking for."}
+                </p>
+                {shows.length === 0 && (
+                  <Button
+                    onClick={() => setAddShowModalStatus(true)}
+                    className="mt-4"
+                  >
+                    Add Your First Show
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8  gap-4 w-full gap-1 mt-1">
+            {filteredShows.map((show) => (
+              <Show
+                type="show"
+                key={show.id}
+                {...show}
+                shows={shows}
+                setShows={setShows}
+                setSelectedShow={setSelectedShow}
+              />
+            ))}
+          </div>
+        );
+      })()}
+    
 
       <ShowModal
         type="show"
