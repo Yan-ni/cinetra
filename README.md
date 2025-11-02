@@ -33,6 +33,7 @@ cd cinetra
 Install backend dependencies :
 
 ```bash
+cd backend
 npm install
 ```
 
@@ -55,14 +56,6 @@ VITE_API_PATH=http://localhost:$PORT
 
 > note that the $PORT parameter references the backend port.
 
-Setup backend environement variables :
-
-```bash
-PORT=$PORT
-DB_CONNECTION_STRING=mongodb://127.0.0.1:27017/$DB_NAME
-NODE_ENV='production' | 'developement'
-```
-
 ### Running the Application
 
 To run the application you need to run the following :
@@ -70,6 +63,7 @@ To run the application you need to run the following :
 Run the backend :
 
 ```bash
+cd backend
 npm run dev
 ```
 

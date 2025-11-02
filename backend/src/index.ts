@@ -17,10 +17,10 @@ app.use(morgan("combined"));
 app.use("/api/v1", apiRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "..", "frontend", "dist")));
+  app.use(express.static(path.join(__dirname, "..", "ui")));
 
-  app.get("*", (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, "..", "frontend", "dist", "index.html"));
+  app.get("/{*any}", (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "..", "ui", "index.html"));
   });
 }
 

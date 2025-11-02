@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build:front": "cd ./frontend && npm run build",
-    "build:back": "tsc",
-    "build:all": "npm run build:back && npm run build:front",
-    "start": "npm run build:all && node dist/index.js",
+    "build": "tsc",
+    "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts"
   },
   "keywords": [],

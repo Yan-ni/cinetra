@@ -10,7 +10,7 @@ export default function LoginPage() {
     password: string;
   }) => {
     await axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/login`, credentials)
+      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/auth/login`, credentials)
       .then((response) => {
         localStorage.setItem("Authorization", `Bearer ${response.data}`);
         navigate("/");
