@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  IconHelp,
   IconInnerShadowTop,
   IconSettings,
 } from "@tabler/icons-react";
@@ -42,11 +41,6 @@ const data = {
       title: "Settings",
       url: "/settings",
       icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "/help",
-      icon: IconHelp,
     },
   ],
 };
