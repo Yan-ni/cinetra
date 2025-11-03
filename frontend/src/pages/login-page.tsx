@@ -1,18 +1,21 @@
 import { LoginForm } from "@/components/login-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 import axios from "axios";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { updateAuth } = useAuth();
 
   const handleSubmit = async (credentials: {
-    username: string;
+    email: string;
     password: string;
   }) => {
     await axios
       .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/auth/login`, credentials)
       .then((response) => {
-        localStorage.setItem("Authorization", `Bearer ${response.data}`);
+        localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
+        updateAuth(); // Update auth state immediately
         navigate("/");
       })
       .catch(() => {

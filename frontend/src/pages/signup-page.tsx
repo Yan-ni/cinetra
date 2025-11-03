@@ -1,9 +1,11 @@
 import { SignupForm } from "@/components/signup-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 import axios from "axios";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const { updateAuth } = useAuth();
 
   const handleSubmit = async (credentials: {
     username: string;
@@ -14,6 +16,7 @@ export default function SignupPage() {
       .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/auth/signup`, credentials)
       .then((response) => {
         localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
+        updateAuth(); // Update auth state immediately
         navigate("/");
       })
       .catch(() => {

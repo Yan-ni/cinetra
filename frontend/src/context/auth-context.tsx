@@ -2,16 +2,22 @@ import { createContext, ReactNode, useState, useEffect } from "react";
 
 interface AuthContextType {
     isAuthenticated: boolean;
+    updateAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  updateAuth: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     localStorage.getItem('Authorization') !== null
   );
+
+  const updateAuth = () => {
+    setIsAuthenticated(localStorage.getItem('Authorization') !== null);
+  };
 
   useEffect(() => {
     // Check authentication status on mount and when localStorage changes
@@ -29,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  return <AuthContext.Provider value={{ isAuthenticated }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAuthenticated, updateAuth }}>{children}</AuthContext.Provider>;
 }
 
 export { AuthContext };
