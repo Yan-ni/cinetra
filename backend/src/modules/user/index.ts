@@ -3,6 +3,7 @@ import { CreateCommand } from "./use-cases/create-command/create.command";
 import { GetByEmailQuery } from "./use-cases/get-by-email-query/get-by-email.query";
 import { UserPrismaRepository } from "./infra/user-prisma.repository";
 import { GetByIdQuery } from "./use-cases/get-by-id-query/get-by-id.query";
+import { UpdateCommand } from "./use-cases/update-command/update.command";
 
 const userRepo = new UserPrismaRepository();
 
@@ -14,5 +15,6 @@ export const userModule = {
   Commands: {
     GetAllCommand: new GetAllCommand(userRepo),
     CreateCommand: new CreateCommand(userRepo),
+    UpdateCommand: new UpdateCommand(userRepo),
   }
 }

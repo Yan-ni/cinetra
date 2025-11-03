@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   IconInnerShadowTop,
   IconSettings,
@@ -18,12 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LayoutDashboardIcon } from "lucide-react";
 
-const data = {
-  user: {
-    name: "user",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const navData = {
   navMain: [
     {
       title: "Shows",
@@ -46,6 +43,43 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = useState({
+    name: "Loading...",
+    email: "",
+    avatar: "/avatars/shadcn.jpg",
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        axios.defaults.headers.common["Authorization"] =
+          localStorage.getItem("Authorization");
+        
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_PATH || ""}/api/v1/user`
+        );
+
+        if (response.status === 200 && response.data) {
+          setUser({
+            name: response.data.username || "User",
+            email: response.data.email || "",
+            avatar: "/avatars/shadcn.jpg",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        // Keep default values if fetch fails
+        setUser({
+          name: "User",
+          email: "",
+          avatar: "/avatars/shadcn.jpg",
+        });
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -64,11 +98,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navData.navMain} />
+        <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
