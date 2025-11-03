@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 import axios from "axios";
 

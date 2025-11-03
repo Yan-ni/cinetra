@@ -3,8 +3,10 @@ import { useAuth } from "./hooks/use-auth.tsx";
 import {
   createBrowserRouter,
   Navigate,
-  RouterProvider,
-} from "react-router-dom";
+  
+} from "react-router";
+import { RouterProvider } from "react-router/dom";
+
 
 import ShowsPage from "./pages/shows-page.tsx";
 import MoviesPage from "./pages/Movies-page.tsx";

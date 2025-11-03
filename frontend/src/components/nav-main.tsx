@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { LucideIcon } from "lucide-react";
 
 export function NavMain({
