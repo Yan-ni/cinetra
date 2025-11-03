@@ -5,6 +5,7 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
@@ -37,6 +38,7 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
 
   // Get initials from username
   const getInitials = (name: string) => {
@@ -49,6 +51,11 @@ export function NavUser({
   };
 
   const userInitials = getInitials(user.name);
+
+  const handleLogout = () => {
+    localStorage.removeItem('Authorization');
+    navigate('/login');
+  };
 
   return (
     <SidebarMenu>
@@ -108,7 +115,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>
