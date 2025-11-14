@@ -7,7 +7,6 @@ import AddShowModal from "../modals/AddShowModal.tsx";
 
 import Show from "@/components/Show.tsx";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -54,16 +53,9 @@ export default function ShowsPage() {
 
   return (
     <div className="px-4 py-6 lg:px-8 lg:py-8">
-      <h1 className="text-2xl font-semibold mb-6">Show List</h1>
-
       <div className="flex items-center justify-between mb-6">
-        <Button
-          onClick={() => setAddShowModalStatus(true)}
-          className="font-medium"
-        >
-          Add a Show
-        </Button>
-        <div className="flex items-center gap-4">
+        <h1 className="text-2xl font-semibold">Show List</h1>
+        <div className="flex items-center gap-3">
           <InputGroup>
             <InputGroupInput
               id="search"
@@ -78,6 +70,12 @@ export default function ShowsPage() {
               <Search />
             </InputGroupAddon>
           </InputGroup>
+          <Button
+            onClick={() => setAddShowModalStatus(true)}
+            className="font-medium"
+          >
+            Add a Show
+          </Button>
           <AddShowModal
             modalStatus={addShowModalStatus}
             setModalStatus={setAddShowModalStatus}
@@ -87,24 +85,16 @@ export default function ShowsPage() {
         </div>
       </div>
 
-      <div className="flex items-end gap-6 mb-6">
-        <div className="flex flex-col gap-1 min-w-[180px]">
-          <Label
-            htmlFor="favoriteFilter"
-          >
-            Filter by Favorite
-          </Label>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
           <Select
-            key={key}
+            key={`favorite-${key}`}
             name="favoriteFilter"
             onValueChange={(value: "favorite" | "notFavorite") =>
               setFilters({ ...filters, favoriteFilter: value })
             }
           >
-            <SelectTrigger
-              id="favoriteFilter"
-              className="w-full"
-            >
+            <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All favorites" />
             </SelectTrigger>
             <SelectContent>
@@ -112,25 +102,15 @@ export default function ShowsPage() {
               <SelectItem value="notFavorite">Not Favorite</SelectItem>
             </SelectContent>
           </Select>
-        </div>
 
-        <div className="flex flex-col gap-1 min-w-[180px]">
-          <Label
-            htmlFor="completeFilter"
-          >
-            Filter by Completion
-          </Label>
           <Select
-            key={key}
+            key={`complete-${key}`}
             name="completeFilter"
             onValueChange={(value: "completed" | "notCompleted") =>
               setFilters({ ...filters, completeFilter: value })
             }
           >
-            <SelectTrigger
-              id="completeFilter"
-              className="w-full"
-            >
+            <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All completion" />
             </SelectTrigger>
             <SelectContent>
@@ -138,22 +118,25 @@ export default function ShowsPage() {
               <SelectItem value="notCompleted">Not Completed</SelectItem>
             </SelectContent>
           </Select>
-        </div>
 
-        <Button
-          variant="outline"
-          onClick={() => {
-            setFilters({
-              favoriteFilter: undefined,
-              completeFilter: undefined,
-            });
-            setKey(+new Date());
-          }}
-          className="flex items-center gap-2 h-10"
-        >
-          <RefreshCw className="w-4 h-4" />
-          <span>Reset Filters</span>
-        </Button>
+          {(filters.favoriteFilter || filters.completeFilter) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setFilters({
+                  favoriteFilter: undefined,
+                  completeFilter: undefined,
+                });
+                setKey(+new Date());
+              }}
+              className="flex items-center gap-1.5 h-9"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       <Separator className="mb-6" />

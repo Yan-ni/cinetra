@@ -7,7 +7,6 @@ import AddMovieModal from "../modals/AddMovieModal.tsx";
 
 import Movie from "@/components/Movie.tsx";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -53,16 +52,9 @@ export default function MoviesPage() {
 
   return (
     <div className="px-4 py-6 lg:px-8 lg:py-8">
-      <h1 className="text-2xl font-semibold mb-6">Movie List</h1>
-
       <div className="flex items-center justify-between mb-6">
-        <Button
-          onClick={() => setAddMovieModalStatus(true)}
-          className="font-medium"
-        >
-          Add a Movie
-        </Button>
-        <div className="flex items-center gap-4">
+        <h1 className="text-2xl font-semibold">Movie List</h1>
+        <div className="flex items-center gap-3">
           <InputGroup>
             <InputGroupInput
               id="search"
@@ -77,6 +69,12 @@ export default function MoviesPage() {
               <Search />
             </InputGroupAddon>
           </InputGroup>
+          <Button
+            onClick={() => setAddMovieModalStatus(true)}
+            className="font-medium"
+          >
+            Add a Movie
+          </Button>
           <AddMovieModal
             modalStatus={addMovieModalStatus}
             setModalStatus={setAddMovieModalStatus}
@@ -86,24 +84,16 @@ export default function MoviesPage() {
         </div>
       </div>
 
-      <div className="flex items-end gap-6 mb-6">
-        <div className="flex flex-col gap-1 min-w-[180px]">
-          <Label
-            htmlFor="favoriteFilter"
-          >
-            Filter by Favorite
-          </Label>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
           <Select
-            key={key}
+            key={`favorite-${key}`}
             name="favoriteFilter"
             onValueChange={(value: "favorite" | "notFavorite") =>
               setFilters({ ...filters, favoriteFilter: value })
             }
           >
-            <SelectTrigger
-              id="favoriteFilter"
-              className="w-full"
-            >
+            <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All favorites" />
             </SelectTrigger>
             <SelectContent>
@@ -111,21 +101,24 @@ export default function MoviesPage() {
               <SelectItem value="notFavorite">Not Favorite</SelectItem>
             </SelectContent>
           </Select>
-        </div>
 
-        <Button
-          variant="outline"
-          onClick={() => {
-            setFilters({
-              favoriteFilter: undefined,
-            });
-            setKey(+new Date());
-          }}
-          className="flex items-center gap-2 h-10"
-        >
-          <RefreshCw className="w-4 h-4" />
-          <span>Reset Filters</span>
-        </Button>
+          {filters.favoriteFilter && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setFilters({
+                  favoriteFilter: undefined,
+                });
+                setKey(+new Date());
+              }}
+              className="flex items-center gap-1.5 h-9"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       <Separator className="mb-6" />
