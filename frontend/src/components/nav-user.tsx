@@ -6,6 +6,7 @@ import {
   IconUserCircle,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 
 import {
   Avatar,
@@ -27,6 +28,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import AccountModal from "@/modals/AccountModal";
 
 export function NavUser({
   user,
@@ -39,6 +41,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
   // Get initials from username
   const getInitials = (name: string) => {
@@ -101,7 +104,7 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsAccountModalOpen(true)}>
                 <IconUserCircle />
                 Account
               </DropdownMenuItem>
@@ -122,6 +125,11 @@ export function NavUser({
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+
+      <AccountModal 
+        open={isAccountModalOpen} 
+        onOpenChange={setIsAccountModalOpen} 
+      />
     </SidebarMenu>
   );
 }

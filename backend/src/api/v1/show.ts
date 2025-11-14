@@ -17,7 +17,6 @@ router.get("/search", async (req: Request, res: Response) => {
 });
 
 router.get("/{:id}", async (req: Request<{id: string}>, res: Response) => {
-  console.log("GET /show/:id called");
   const showId = req.params.id;
 
   if (showId) {
