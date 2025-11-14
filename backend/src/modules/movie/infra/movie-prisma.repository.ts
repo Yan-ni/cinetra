@@ -24,13 +24,6 @@ export class MoviePrismaRepository implements MovieRepository {
     return movies;
   }
 
-  async findByShowId(showId: number, userId: string): Promise<Movie | null> {
-    const movie = await this.prisma.movie.findFirst({
-      where: { showId: showId, userId: userId }
-    });
-    return movie;
-  }
-
   async create(movieData: CreateMovieDto, userId: string): Promise<Movie> {
     const newMovie = await this.prisma.movie.create({
       data: {...movieData, userId: userId}

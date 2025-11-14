@@ -8,7 +8,6 @@ export interface ShowType {
     completed: boolean;
     favorite: boolean;
     userId: string;
-    showId: number;
     createdAt: string;
     updatedAt: string;
 }
@@ -20,7 +19,6 @@ export interface MovieType {
     posterURL?: string;
     favorite: boolean;
     userId: string;
-    showId?: number;
     createdAt: string;
     updatedAt: string;
 }

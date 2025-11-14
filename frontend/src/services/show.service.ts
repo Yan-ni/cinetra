@@ -9,7 +9,6 @@ interface CreateShowData {
   episodesWatched?: number;
   completed?: boolean;
   favorite?: boolean;
-  showId?: number;
 }
 
 interface UpdateShowData {
@@ -20,7 +19,6 @@ interface UpdateShowData {
   episodesWatched?: number;
   completed?: boolean;
   favorite?: boolean;
-  showId?: number;
 }
 
 interface ShowSearchResult {

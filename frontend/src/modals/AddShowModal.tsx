@@ -24,7 +24,6 @@ interface AddShowModalProps {
 }
 
 interface FoundShow {
-  showId: number;
   name: string;
   overview: string;
   posterURL: string;
@@ -46,7 +45,6 @@ export default function AddShowModal({
   }[]>([]);
 
   const [show, setShow] = useState<FoundShow>({
-    showId: 0,
     name: "",
     overview: "",
     posterURL: "",
@@ -57,7 +55,6 @@ export default function AddShowModal({
     setSearch("");
     setSearchResult([]);
     setShow({
-      showId: 0,
       name: "",
       overview: "",
       posterURL: "",
@@ -98,14 +95,13 @@ export default function AddShowModal({
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    searchResult.forEach(({ id, name, overview, posterURL: poster_path }, index) => {
+    searchResult.forEach(({ name, overview, posterURL: poster_path }, index) => {
       const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
       
       if (
         name &&
         overview &&
-        posterURL &&
-        !shows.find((show) => show.showId === id)
+        posterURL
       ) {
         result.push(
           <li
@@ -113,7 +109,6 @@ export default function AddShowModal({
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setShow({
-                showId: id,
                 name,
                 overview,
                 posterURL,

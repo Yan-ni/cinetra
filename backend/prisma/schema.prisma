@@ -36,7 +36,6 @@ model Show {
   favorite        Boolean  @default(false)
   user            User     @relation(fields: [userId], references: [id])
   userId          String
-  showId          Int?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -49,7 +48,6 @@ model Movie {
   favorite  Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  showId    Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

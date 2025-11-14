@@ -44,7 +44,6 @@ export default function MovieModal({
     posterURL: "",
     favorite: false,
     userId: "",
-    showId: 0,
     updatedAt: "",
     createdAt: "",
   });

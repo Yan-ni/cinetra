@@ -8,7 +8,6 @@ export interface Show {
   completed: boolean;
   favorite: boolean;
   userId: string;
-  showId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,7 +20,6 @@ export interface CreateShowDto {
   episodesWatched?: number;
   completed?: boolean;
   favorite?: boolean;
-  showId?: number;
 }
 
 export interface UpdateShowDto {
@@ -32,5 +30,4 @@ export interface UpdateShowDto {
   episodesWatched?: number;
   completed?: boolean;
   favorite?: boolean;
-  showId?: number;
 }

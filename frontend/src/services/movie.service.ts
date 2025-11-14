@@ -6,7 +6,6 @@ interface CreateMovieData {
   overview?: string;
   posterURL?: string;
   favorite?: boolean;
-  showId?: number;
 }
 
 interface UpdateMovieData {
@@ -14,7 +13,6 @@ interface UpdateMovieData {
   overview?: string;
   posterURL?: string;
   favorite?: boolean;
-  showId?: number;
 }
 
 interface MovieSearchResult {

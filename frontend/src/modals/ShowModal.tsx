@@ -51,7 +51,6 @@ export default function ShowModal({
     completed: false,
     favorite: false,
     userId: "",
-    showId: 0,
     updatedAt: "",
     createdAt: "",
   });

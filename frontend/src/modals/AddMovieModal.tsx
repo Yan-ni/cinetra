@@ -24,7 +24,6 @@ interface AddMovieModalProps {
 }
 
 interface FoundMovie {
-  showId: number;
   name: string;
   overview: string;
   posterURL: string;
@@ -47,7 +46,6 @@ export default function AddMovieModal({
   }[]>([]);
 
   const [movie, setMovie] = useState<FoundMovie>({
-    showId: 0,
     name: "",
     overview: "",
     posterURL: "",
@@ -58,7 +56,6 @@ export default function AddMovieModal({
     setSearch("");
     setSearchResult([]);
     setMovie({
-      showId: 0,
       name: "",
       overview: "",
       posterURL: "",
@@ -100,14 +97,13 @@ export default function AddMovieModal({
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    searchResult.forEach(({ id, title, overview, poster_path }, index) => {
+    searchResult.forEach(({ title, overview, poster_path }, index) => {
       const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
       
       if (
         title &&
         overview &&
-        posterURL &&
-        !movies.find((movie) => movie.showId === id)
+        posterURL
       ) {
         result.push(
           <li
@@ -115,7 +111,6 @@ export default function AddMovieModal({
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setMovie({
-                showId: id,
                 name: title,
                 overview,
                 posterURL,

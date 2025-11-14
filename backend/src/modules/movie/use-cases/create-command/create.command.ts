@@ -9,14 +9,6 @@ export class CreateCommand {
   }
 
   async execute(movieData: CreateMovieDto, userId: string): Promise<Movie> {
-    // Check if movie with same showId already exists for this user
-    if (movieData.showId) {
-      const existingMovie = await this.movieRepository.findByShowId(movieData.showId, userId);
-      if (existingMovie) {
-        throw new Error('Movie already exists');
-      }
-    }
-    
     return await this.movieRepository.create(movieData, userId);
   }
 }

@@ -5,7 +5,6 @@ export interface Movie {
   posterURL: string | null;
   favorite: boolean;
   userId: string;
-  showId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,7 +14,6 @@ export interface CreateMovieDto {
   overview?: string;
   posterURL?: string;
   favorite?: boolean;
-  showId?: number;
 }
 
 export interface UpdateMovieDto {
@@ -23,5 +21,4 @@ export interface UpdateMovieDto {
   overview?: string;
   posterURL?: string;
   favorite?: boolean;
-  showId?: number;
 }
