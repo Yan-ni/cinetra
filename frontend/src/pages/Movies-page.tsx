@@ -48,7 +48,7 @@ export default function MoviesPage() {
 
   return (
     <div className="px-4 py-6 lg:px-8 lg:py-8">
-      <h1 className="text-2xl font-semibold text-gray-900 mb-6">Movie List</h1>
+      <h1 className="text-2xl font-semibold mb-6">Movie List</h1>
 
       <div className="flex items-center justify-between mb-6">
         <Button
@@ -80,7 +80,6 @@ export default function MoviesPage() {
         <div className="flex flex-col gap-1 min-w-[180px]">
           <Label
             htmlFor="favoriteFilter"
-            className="text-sm font-medium text-gray-700"
           >
             Filter by Favorite
           </Label>

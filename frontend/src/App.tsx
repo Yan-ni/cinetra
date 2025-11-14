@@ -14,6 +14,7 @@ import LoginPage from "./pages/login-page.tsx";
 import SignupPage from "./pages/signup-page.tsx";
 import WelcomePage from "./pages/welcome-page.tsx";
 import { AuthProvider } from "./context/auth-context.tsx";
+import { ThemeProvider } from "./components/theme-provider.tsx";
 import HomePage from "./pages/home-page.tsx";
 
 const router = createBrowserRouter([
@@ -51,9 +52,11 @@ const router = createBrowserRouter([
 
 const App: FC = () => {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 
