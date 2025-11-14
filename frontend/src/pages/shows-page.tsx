@@ -8,7 +8,11 @@ import AddShowModal from "../modals/AddShowModal.tsx";
 import Show from "@/components/Show.tsx";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { ShowType } from "@/types/index.ts";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 
 interface ListFiltersType {
   favoriteFilter?: "favorite" | "notFavorite";
@@ -59,15 +64,20 @@ export default function ShowsPage() {
           Add a Show
         </Button>
         <div className="flex items-center gap-4">
-          <Input
-            id="search"
-            type="text"
-            name="search"
-            placeholder="Search for a show..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value.toLowerCase())}
-            className="w-64 px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <InputGroup>
+            <InputGroupInput
+              id="search"
+              type="text"
+              name="search"
+              placeholder="Search for a show..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              className="w-64"
+            />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
           <AddShowModal
             modalStatus={addShowModalStatus}
             setModalStatus={setAddShowModalStatus}
@@ -93,7 +103,7 @@ export default function ShowsPage() {
           >
             <SelectTrigger
               id="favoriteFilter"
-              className="w-full border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500"
+              className="w-full"
             >
               <SelectValue placeholder="All favorites" />
             </SelectTrigger>
@@ -119,7 +129,7 @@ export default function ShowsPage() {
           >
             <SelectTrigger
               id="completeFilter"
-              className="w-full border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500"
+              className="w-full"
             >
               <SelectValue placeholder="All completion" />
             </SelectTrigger>
@@ -146,7 +156,7 @@ export default function ShowsPage() {
         </Button>
       </div>
 
-      <hr className="border-t border-gray-200 mb-6" />
+      <Separator className="mb-6" />
 
       {(() => {
         const filteredShows = shows?.filter((show) => {

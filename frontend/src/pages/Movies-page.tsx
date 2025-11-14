@@ -8,7 +8,11 @@ import AddMovieModal from "../modals/AddMovieModal.tsx";
 import Movie from "@/components/Movie.tsx";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { MovieType } from "@/types/index.ts";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 
 interface ListFiltersType {
   favoriteFilter?: "favorite" | "notFavorite";
@@ -58,15 +63,20 @@ export default function MoviesPage() {
           Add a Movie
         </Button>
         <div className="flex items-center gap-4">
-          <Input
-            id="search"
-            type="text"
-            name="search"
-            placeholder="Search for a movie..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value.toLowerCase())}
-            className="w-64 px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <InputGroup>
+            <InputGroupInput
+              id="search"
+              type="text"
+              name="search"
+              placeholder="Search for a movie..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              className="w-64"
+            />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
           <AddMovieModal
             modalStatus={addMovieModalStatus}
             setModalStatus={setAddMovieModalStatus}
@@ -92,7 +102,7 @@ export default function MoviesPage() {
           >
             <SelectTrigger
               id="favoriteFilter"
-              className="w-full border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500"
+              className="w-full"
             >
               <SelectValue placeholder="All favorites" />
             </SelectTrigger>
@@ -118,7 +128,7 @@ export default function MoviesPage() {
         </Button>
       </div>
 
-      <hr className="border-t border-gray-200 mb-6" />
+      <Separator className="mb-6" />
 
       {(() => {
         const filteredMovies = movies?.filter((movie) => {

@@ -127,7 +127,7 @@ export default function AddShowModal({
               <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
                 {name}
               </p>
-              <p className="custom-clamp overflow-hidden text-ellipsis text-sm font-light">
+              <p className="overflow-hidden text-ellipsis text-sm font-light">
                 {overview}
               </p>
             </div>
