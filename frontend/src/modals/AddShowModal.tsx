@@ -42,8 +42,7 @@ export default function AddShowModal({
     id: number;
     name: string;
     overview: string;
-    poster_path: string;
-    first_air_date: string;
+    posterURL: string;
   }[]>([]);
 
   const [show, setShow] = useState<FoundShow>({

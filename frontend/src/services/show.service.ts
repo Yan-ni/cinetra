@@ -27,8 +27,7 @@ interface ShowSearchResult {
   id: number;
   name: string;
   overview: string;
-  poster_path: string;
-  first_air_date: string;
+  posterURL: string;
 }
 
 class ShowServiceClass extends ApiService {
