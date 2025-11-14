@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { UserService } from "@/services";
 import { UserType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,21 +38,13 @@ export default function AccountModal({ open, onOpenChange }: AccountModalProps) 
   const fetchUserData = async () => {
     try {
       setIsLoading(true);
-      axios.defaults.headers.common["Authorization"] =
-        localStorage.getItem("Authorization");
-      
-      const response = await axios.get<UserType>(
-        `${import.meta.env.VITE_API_PATH || ""}/api/v1/user`,
-      );
-
-      if (response.status === 200 && response.data) {
-        setUser(response.data);
-        setFormData({
-          username: response.data.username,
-          email: response.data.email,
-        });
-        setHasChanges(false);
-      }
+      const userData = await UserService.getCurrentUser();
+      setUser(userData);
+      setFormData({
+        username: userData.username,
+        email: userData.email,
+      });
+      setHasChanges(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
       toast.error("Failed to load user data");
@@ -86,23 +78,14 @@ export default function AccountModal({ open, onOpenChange }: AccountModalProps) 
 
     try {
       setIsSaving(true);
-      axios.defaults.headers.common["Authorization"] =
-        localStorage.getItem("Authorization");
-
-      const response = await axios.put<UserType>(
-        `${import.meta.env.VITE_API_PATH || ""}/api/v1/user`,
-        formData,
-      );
-
-      if (response.status === 200) {
-        setUser(response.data);
-        setFormData({
-          username: response.data.username,
-          email: response.data.email,
-        });
-        setHasChanges(false);
-        toast.success("Account updated successfully");
-      }
+      const updatedUser = await UserService.updateUser(formData);
+      setUser(updatedUser);
+      setFormData({
+        username: updatedUser.username,
+        email: updatedUser.email,
+      });
+      setHasChanges(false);
+      toast.success("Account updated successfully");
     } catch (error) {
       console.error("Error updating user data:", error);
       toast.error("Failed to update account");

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { ShowService } from "@/services";
 import ShowControl from "../components/ShowControl.tsx";
 import {
   Dialog,
@@ -40,65 +40,42 @@ export default function ShowModal({
     updatedAt: "",
     createdAt: "",
   });
-  const [overviewCollapsed, setOverviewCollapsed] = useState(true);
+  const [overviewCollapsed] = useState(true);
 
   const update = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const payload: {
-      seasonsWatched?: number;
-      episodesWatched?: number;
-    } = {};
     const target = e.target as HTMLButtonElement;
     const op = target.textContent;
     const type = target.name;
 
     if (op !== "+" && op !== "-") return;
-
     if (type !== "seasons" && type !== "episodes") return;
+    if (!selectedShow) return;
 
-    if (type === "seasons")
-      payload.seasonsWatched = show.seasonsWatched + (op === "-" ? -1 : 1);
+    try {
+      if (type === "seasons") {
+        const newCount = show.seasonsWatched + (op === "-" ? -1 : 1);
+        await ShowService.updateSeasons(selectedShow, newCount);
+        setShow((prev) => ({ ...prev, seasonsWatched: newCount }));
+      }
 
-    if (type === "episodes")
-      payload.episodesWatched = show.episodesWatched + (op === "-" ? -1 : 1);
-
-    await axios
-      .put(
-        `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
-        payload,
-      )
-      .then((response) => {
-        if (response.status !== 200) return;
-
-        if (payload.seasonsWatched) {
-          setShow((prev) => ({
-            ...prev,
-            seasonsWatched: payload.seasonsWatched as number,
-          }));
-        }
-
-        if (payload.episodesWatched) {
-          setShow((prev) => ({
-            ...prev,
-            episodesWatched: payload.episodesWatched as number, // Assert non-undefined
-          }));
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "error occurred when updating show's seasons count or episodes count",
-        );
-        if (import.meta.env.DEV) console.error(error);
-      });
+      if (type === "episodes") {
+        const newCount = show.episodesWatched + (op === "-" ? -1 : 1);
+        await ShowService.updateEpisodes(selectedShow, newCount);
+        setShow((prev) => ({ ...prev, episodesWatched: newCount }));
+      }
+    } catch (error) {
+      console.error(
+        "error occurred when updating show's seasons count or episodes count",
+        error,
+      );
+    }
   };
 
   const toggleComplete = async () => {
+    if (!selectedShow) return;
+    
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
-        {
-          completed: !show.completed,
-        },
-      );
+      await ShowService.toggleCompleted(selectedShow, !show.completed);
       setShows(
         shows.map<ShowType>((s) => {
           if (s.showId === show.showId) {
@@ -115,8 +92,7 @@ export default function ShowModal({
         completed: !show.completed,
       });
     } catch (error) {
-      console.error("something went wrong when setting the show as complete.");
-      if (import.meta.env.DEV) console.error(error);
+      console.error("something went wrong when setting the show as complete.", error);
     }
   };
 
@@ -129,14 +105,10 @@ export default function ShowModal({
 
     const loadShow = async () => {
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
-        );
-
-        setShow(result.data);
+        const showData = await ShowService.getShowById(selectedShow);
+        setShow(showData);
       } catch (error) {
-        console.error(`error occurred loading the show`);
-        if (import.meta.env.DEV) console.error(error);
+        console.error(`error occurred loading the show`, error);
       }
     };
 
@@ -161,15 +133,15 @@ export default function ShowModal({
           className="bg-red-600"
           onClick={() => {
             if (window.confirm("are you sure you want to delete this show ?")) {
-              axios
-                .delete(
-                  `${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${selectedShow}`,
-                )
-                .then((res) => {
-                  if (res.status === 200) {
-                    setShows(shows.filter((show) => show.id !== selectedShow));
-                    closeModal();
-                  }
+              if (!selectedShow) return;
+              
+              ShowService.deleteShow(selectedShow)
+                .then(() => {
+                  setShows(shows.filter((show) => show.id !== selectedShow));
+                  closeModal();
+                })
+                .catch((err) => {
+                  console.error("Error deleting show", err);
                 });
             }
           }}

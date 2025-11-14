@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { MovieService } from "@/services";
 import {
   Dialog,
   DialogContent,
@@ -44,14 +44,10 @@ export default function MovieModal({
 
     const loadMovie = async () => {
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/api/v1/movie/${selectedMovie}`,
-        );
-
-        setMovie(result.data);
+        const movieData = await MovieService.getMovieById(selectedMovie);
+        setMovie(movieData);
       } catch (error) {
-        console.error(`error occurred loading the movie`);
-        if (import.meta.env.DEV) console.error(error);
+        console.error(`error occurred loading the movie`, error);
       }
     };
 
@@ -71,16 +67,14 @@ export default function MovieModal({
         <Button
           className="bg-red-600"
           onClick={() => {
-            if (window.confirm("are you sure you want to delete this movie?")) {
-              axios
-                .delete(
-                  `${import.meta.env.VITE_API_PATH || ""}/api/v1/movie/${selectedMovie}`,
-                )
-                .then((res) => {
-                  if (res.status === 200) {
-                    setMovies(movies.filter((movie) => movie.id !== selectedMovie));
-                    closeModal();
-                  }
+            if (window.confirm("are you sure you want to delete this movie?") && selectedMovie) {
+              MovieService.deleteMovie(selectedMovie)
+                .then(() => {
+                  setMovies(movies.filter((movie) => movie.id !== selectedMovie));
+                  closeModal();
+                })
+                .catch((err) => {
+                  console.error("Error deleting movie", err);
                 });
             }
           }}

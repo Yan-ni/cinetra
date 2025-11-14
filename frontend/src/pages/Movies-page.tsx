@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import { MovieService } from "@/services";
 
 import MovieModal from "../modals/MovieModal.tsx";
 import AddMovieModal from "../modals/AddMovieModal.tsx";
@@ -33,25 +33,13 @@ export default function MoviesPage() {
   const [key, setKey] = useState(+new Date());
 
   useEffect(() => {
-    axios.defaults.headers.common["Authorization"] =
-      localStorage.getItem("Authorization");
     const loadMovies = async () => {
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/api/v1/movie`,
-        );
-
-        if (result.status === 200 && Array.isArray(result.data))
-          setMovies(result.data);
+        const moviesData = await MovieService.getAllMovies();
+        setMovies(moviesData);
       } catch (error) {
-        if (error instanceof Error && "response" in error) {
-          const axiosError = error as AxiosError;
-          if (axiosError.response?.status === 401) {
-            navigate("/login");
-          }
-          console.error("error occurred loading movies");
-          if (import.meta.env.DEV) console.error(error);
-        }
+        console.error("error occurred loading movies", error);
+        navigate("/login");
       }
     };
 

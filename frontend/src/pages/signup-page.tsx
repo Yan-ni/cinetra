@@ -1,7 +1,7 @@
 import { SignupForm } from "@/components/signup-form";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
-import axios from "axios";
+import { AuthService } from "@/services";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -12,16 +12,13 @@ export default function SignupPage() {
     email: string;
     password: string;
   }) => {
-    await axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/auth/signup`, credentials)
-      .then((response) => {
-        localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
-        updateAuth(); // Update auth state immediately
-        navigate("/");
-      })
-      .catch(() => {
-        console.error("an error occurred during signup");
-      });
+    try {
+      await AuthService.signup(credentials);
+      updateAuth(); // Update auth state immediately
+      navigate("/");
+    } catch (error) {
+      console.error("an error occurred during signup", error);
+    }
   };
 
   return (

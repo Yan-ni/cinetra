@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { MovieService } from "@/services";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +38,13 @@ export default function AddMovieModal({
 }: AddMovieModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<{
+    id: number;
+    title: string;
+    overview: string;
+    poster_path: string;
+    release_date: string;
+  }[]>([]);
 
   const [movie, setMovie] = useState<FoundMovie>({
     showId: 0,
@@ -66,17 +72,17 @@ export default function AddMovieModal({
       return;
     }
 
-    axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/movie`, movie)
-      .then((res) => {
-        if (res.status === 201) setMovies([res.data, ...movies]);
+    MovieService.createMovie(movie)
+      .then((newMovie) => {
+        setMovies([newMovie, ...movies]);
       })
       .catch((err) => {
-        console.error(err.response.status);
-        if (err.response.status === 409)
+        console.error(err);
+        if (err.response?.status === 409) {
           alert(
             `the movie you're trying to add already exists in your list.`,
           );
+        }
       })
       .finally(() => {
         closeModal();
@@ -84,16 +90,24 @@ export default function AddMovieModal({
   };
 
   const filterAndMapSearchResult = (
-    searchResult: FoundMovie[],
+    searchResult: {
+      id: number;
+      title: string;
+      overview: string;
+      poster_path: string;
+      release_date: string;
+    }[],
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    searchResult.forEach(({ showId: showId, name, overview, posterURL }, index) => {
+    searchResult.forEach(({ id, title, overview, poster_path }, index) => {
+      const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
+      
       if (
-        name &&
+        title &&
         overview &&
         posterURL &&
-        !movies.find((movie) => movie.showId === showId)
+        !movies.find((movie) => movie.showId === id)
       ) {
         result.push(
           <li
@@ -101,8 +115,8 @@ export default function AddMovieModal({
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setMovie({
-                showId: showId,
-                name,
+                showId: id,
+                name: title,
                 overview,
                 posterURL,
               });
@@ -112,7 +126,7 @@ export default function AddMovieModal({
             <img src={posterURL} className="h-16 aspect-[3/4]" alt="" />
             <div>
               <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-                {name}
+                {title}
               </p>
               <p className="custom-clamp overflow-hidden text-ellipsis text-sm font-light">
                 {overview}
@@ -130,22 +144,18 @@ export default function AddMovieModal({
     if (!debouncedSearchTerm) {
       setSearchResult([]);
       return;
-    } else {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_PATH || ""
-          }/api/v1/movie/search?q=${debouncedSearchTerm}`,
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200) setSearchResult(res.data);
-          else
-            alert(
-              "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
-            );
-        });
     }
+    
+    MovieService.searchMovies(debouncedSearchTerm)
+      .then((results) => {
+        setSearchResult(results);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert(
+          "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
+        );
+      });
   }, [debouncedSearchTerm]);
 
   return (

@@ -1,5 +1,5 @@
 import { ShowType } from "@/types";
-import axios from "axios";
+import { ShowService } from "@/services";
 
 interface ShowProps {
   id: string;
@@ -20,15 +20,11 @@ export default function Show({
   setSelectedShow,
   shows,
   setShows,
-  type,
 }: ShowProps) {
   const toggleFavorite = async (id: string, favorite: boolean) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/api/v1/show/${id}`, {
-        favorite: !favorite,
-      });
+      await ShowService.toggleFavorite(id, !favorite);
 
-      // TODO: check response status
       setShows(
         shows.map((show) => {
           if (show.id !== id) return show;
@@ -37,8 +33,7 @@ export default function Show({
         }),
       );
     } catch (error) {
-      console.error("error occured while toggling show favorite button");
-      if (import.meta.env.DEV) console.error(error);
+      console.error("error occurred while toggling show favorite button", error);
     }
   };
 

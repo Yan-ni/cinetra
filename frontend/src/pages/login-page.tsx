@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/login-form";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
-import axios from "axios";
+import { AuthService } from "@/services";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -11,16 +11,16 @@ export default function LoginPage() {
     email: string;
     password: string;
   }) => {
-    await axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/auth/login`, credentials)
-      .then((response) => {
-        localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
-        updateAuth(); // Update auth state immediately
-        navigate("/");
-      })
-      .catch(() => {
-        console.error("an error uccured during login");
+    try {
+      await AuthService.login({
+        username: credentials.email,
+        password: credentials.password,
       });
+      updateAuth(); // Update auth state immediately
+      navigate("/");
+    } catch (error) {
+      console.error("an error occurred during login", error);
+    }
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { ShowService } from "@/services";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +38,13 @@ export default function AddShowModal({
 }: AddShowModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<{
+    id: number;
+    name: string;
+    overview: string;
+    poster_path: string;
+    first_air_date: string;
+  }[]>([]);
 
   const [show, setShow] = useState<FoundShow>({
     showId: 0,
@@ -66,17 +72,17 @@ export default function AddShowModal({
       return;
     }
 
-    axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/api/v1/show`, show)
-      .then((res) => {
-        if (res.status === 201) setShows([res.data, ...shows]);
+    ShowService.createShow(show)
+      .then((newShow) => {
+        setShows([newShow, ...shows]);
       })
       .catch((err) => {
-        console.error(err.response.status);
-        if (err.response.status === 409)
+        console.error(err);
+        if (err.response?.status === 409) {
           alert(
             `the show you're trying to add already exists in your list.`,
           );
+        }
       })
       .finally(() => {
         closeModal();
@@ -84,25 +90,32 @@ export default function AddShowModal({
   };
 
   const filterAndMapSearchResult = (
-    searchResult: FoundShow[],
+    searchResult: {
+      id: number;
+      name: string;
+      overview: string;
+      poster_path: string;
+      first_air_date: string;
+    }[],
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    // Time complexity: O(n)
-    searchResult.forEach(({ showId: showId, name, overview, posterURL }, index) => {
+    searchResult.forEach(({ id, name, overview, poster_path }, index) => {
+      const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
+      
       if (
         name &&
         overview &&
         posterURL &&
-        !shows.find((show) => show.showId === showId)
+        !shows.find((show) => show.showId === id)
       ) {
         result.push(
           <li
-            key={index} // Consider using showId instead of index for stable keys
+            key={index}
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setShow({
-                showId: showId,
+                showId: id,
                 name,
                 overview,
                 posterURL,
@@ -131,22 +144,18 @@ export default function AddShowModal({
     if (!debouncedSearchTerm) {
       setSearchResult([]);
       return;
-    } else {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_PATH || ""
-          }/api/v1/show/search?q=${debouncedSearchTerm}`,
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200) setSearchResult(res.data);
-          else
-            alert(
-              "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
-            );
-        });
     }
+    
+    ShowService.searchShows(debouncedSearchTerm)
+      .then((results) => {
+        setSearchResult(results);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert(
+          "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
+        );
+      });
   }, [debouncedSearchTerm]);
 
   return (

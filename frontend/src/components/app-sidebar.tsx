@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { UserService } from "@/services";
 import {
   IconInnerShadowTop,
 } from "@tabler/icons-react";
@@ -43,20 +43,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        axios.defaults.headers.common["Authorization"] =
-          localStorage.getItem("Authorization");
-        
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/api/v1/user`
-        );
-
-        if (response.status === 200 && response.data) {
-          setUser({
-            name: response.data.username || "User",
-            email: response.data.email || "",
-            avatar: "/avatars/shadcn.jpg",
-          });
-        }
+        const userData = await UserService.getCurrentUser();
+        setUser({
+          name: userData.username || "User",
+          email: userData.email || "",
+          avatar: "/avatars/shadcn.jpg",
+        });
       } catch (error) {
         console.error("Error fetching user info:", error);
         // Keep default values if fetch fails

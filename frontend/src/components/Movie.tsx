@@ -1,5 +1,5 @@
 import { MovieType } from "@/types";
-import axios from "axios";
+import { MovieService } from "@/services";
 
 interface MovieProps {
   id: string;
@@ -22,11 +22,8 @@ export default function Movie({
 }: MovieProps) {
   const toggleFavorite = async (id: string, favorite: boolean) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/api/v1/movie/${id}`, {
-        favorite: !favorite,
-      });
+      await MovieService.toggleFavorite(id, !favorite);
 
-      // TODO: check response status
       setMovies(
         movies.map((movie) => {
           if (movie.id !== id) return movie;
@@ -35,8 +32,7 @@ export default function Movie({
         }),
       );
     } catch (error) {
-      console.error("error occurred while toggling movie favorite button");
-      if (import.meta.env.DEV) console.error(error);
+      console.error("error occurred while toggling movie favorite button", error);
     }
   };
 

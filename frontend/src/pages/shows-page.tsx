@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import { ShowService } from "@/services";
 
 import ShowModal from "../modals/ShowModal.tsx";
 import AddShowModal from "../modals/AddShowModal.tsx";
@@ -34,25 +34,13 @@ export default function ShowsPage() {
   const [key, setKey] = useState(+new Date());
 
   useEffect(() => {
-    axios.defaults.headers.common["Authorization"] =
-      localStorage.getItem("Authorization");
     const loadShows = async () => {
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/api/v1/show`,
-        );
-
-        if (result.status === 200 && Array.isArray(result.data))
-          setShows(result.data);
+        const showsData = await ShowService.getAllShows();
+        setShows(showsData);
       } catch (error) {
-        if (error instanceof Error && "response" in error) {
-          const axiosError = error as AxiosError;
-          if (axiosError.response?.status === 401) {
-            navigate("/login");
-          }
-          console.error("error occured loading shows");
-          if (import.meta.env.DEV) console.error(error);
-        }
+        console.error("error occurred loading shows", error);
+        navigate("/login");
       }
     };
 

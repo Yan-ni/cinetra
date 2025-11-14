@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { AuthService } from "@/services";
 
 import {
   Avatar,
@@ -56,7 +57,7 @@ export function NavUser({
   const userInitials = getInitials(user.name);
 
   const handleLogout = () => {
-    localStorage.removeItem('Authorization');
+    AuthService.logout();
     navigate('/login');
   };
 
