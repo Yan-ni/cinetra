@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: cinetra-postgres
-    image: postgres:latest
+    image: postgres:18
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -13,7 +13,7 @@ services:
       timeout: 3s
       retries: 5
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/18/docker
     ports:
       - 5432:5432
 
