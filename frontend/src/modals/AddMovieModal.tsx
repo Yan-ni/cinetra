@@ -38,11 +38,9 @@ export default function AddMovieModal({
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [searchResult, setSearchResult] = useState<{
-    id: number;
-    title: string;
+    name: string;
     overview: string;
-    poster_path: string;
-    release_date: string;
+    posterURL: string;
   }[]>([]);
 
   const [movie, setMovie] = useState<FoundMovie>({
@@ -88,20 +86,18 @@ export default function AddMovieModal({
 
   const filterAndMapSearchResult = (
     searchResult: {
-      id: number;
-      title: string;
+      name: string;
       overview: string;
-      poster_path: string;
-      release_date: string;
+      posterURL: string;
     }[],
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    searchResult.forEach(({ title, overview, poster_path }, index) => {
+    searchResult.forEach(({ name, overview, posterURL: poster_path }, index) => {
       const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
       
       if (
-        title &&
+        name &&
         overview &&
         posterURL
       ) {
@@ -111,7 +107,7 @@ export default function AddMovieModal({
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setMovie({
-                name: title,
+                name,
                 overview,
                 posterURL,
               });
@@ -121,7 +117,7 @@ export default function AddMovieModal({
             <img src={posterURL} className="h-16 aspect-[3/4]" alt="" />
             <div>
               <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-                {title}
+                {name}
               </p>
               <p className="custom-clamp overflow-hidden text-ellipsis text-sm font-light">
                 {overview}
