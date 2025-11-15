@@ -1,23 +1,26 @@
 import { LoginForm } from "@/components/login-form";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router";
+import { useAuth } from "@/hooks/use-auth";
+import { AuthService } from "@/services";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { updateAuth } = useAuth();
 
   const handleSubmit = async (credentials: {
-    username: string;
+    email: string;
     password: string;
   }) => {
-    await axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/login`, credentials)
-      .then((response) => {
-        localStorage.setItem("Authorization", `Bearer ${response.data}`);
-        navigate("/");
-      })
-      .catch(() => {
-        console.error("an error uccured during login");
+    try {
+      await AuthService.login({
+        email: credentials.email,
+        password: credentials.password,
       });
+      updateAuth(); // Update auth state immediately
+      navigate("/");
+    } catch (error) {
+      console.error("an error occurred during login", error);
+    }
   };
 
   return (

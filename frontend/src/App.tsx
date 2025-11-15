@@ -3,13 +3,18 @@ import { useAuth } from "./hooks/use-auth.tsx";
 import {
   createBrowserRouter,
   Navigate,
-  RouterProvider,
-} from "react-router-dom";
+  
+} from "react-router";
+import { RouterProvider } from "react-router/dom";
+
 
 import ShowsPage from "./pages/shows-page.tsx";
-// import MovieScreen from "./pages/Movies-page.tsx";
+import MoviesPage from "./pages/Movies-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
+import SignupPage from "./pages/signup-page.tsx";
+import WelcomePage from "./pages/welcome-page.tsx";
 import { AuthProvider } from "./context/auth-context.tsx";
+import { ThemeProvider } from "./components/theme-provider.tsx";
 import HomePage from "./pages/home-page.tsx";
 
 const router = createBrowserRouter([
@@ -22,8 +27,16 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        element: <WelcomePage />,
+      },
+      {
         path: "/shows",
         element: <ShowsPage />,
+      },
+      {
+        path: "/movies",
+        element: <MoviesPage />,
       },
     ],
   },
@@ -31,13 +44,19 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginPage />,
   },
+  {
+    path: "/signup",
+    element: <SignupPage />,
+  },
 ]);
 
 const App: FC = () => {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

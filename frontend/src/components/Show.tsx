@@ -1,8 +1,8 @@
 import { ShowType } from "@/types";
-import axios from "axios";
+import { ShowService } from "@/services";
 
 interface ShowProps {
-  _id: string;
+  id: string;
   name: string;
   favorite: boolean;
   posterURL: string;
@@ -13,39 +13,34 @@ interface ShowProps {
 }
 
 export default function Show({
-  _id,
+  id,
   name,
   favorite,
   posterURL,
   setSelectedShow,
   shows,
   setShows,
-  type,
 }: ShowProps) {
-  const toggleFavorite = async (_id: string, favorite: boolean) => {
+  const toggleFavorite = async (id: string, favorite: boolean) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_PATH || ""}/${type}/${_id}`, {
-        favorite: !favorite,
-      });
+      await ShowService.toggleFavorite(id, !favorite);
 
-      // TODO: check response status
       setShows(
         shows.map((show) => {
-          if (show._id !== _id) return show;
+          if (show.id !== id) return show;
 
           return { ...show, favorite: !favorite };
         }),
       );
     } catch (error) {
-      console.error("error occured while toggling show favorite button");
-      if (import.meta.env.DEV) console.error(error);
+      console.error("error occurred while toggling show favorite button", error);
     }
   };
 
   return (
     <div
       className="aspect-[2/3] relative cursor-pointer rounded-md overflow-hidden"
-      onClick={() => setSelectedShow(_id)}
+      onClick={() => setSelectedShow(id)}
     >
       <img className="w-full h-full object-cover" src={posterURL} alt="" />
       <svg
@@ -55,7 +50,7 @@ export default function Show({
         xmlns="http://www.w3.org/2000/svg"
         onClick={(e) => {
           e.stopPropagation();
-          toggleFavorite(_id, favorite);
+          toggleFavorite(id, favorite);
         }}
       >
         <path

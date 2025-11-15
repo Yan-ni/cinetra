@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { ShowService } from "@/services";
 import {
   Dialog,
   DialogContent,
@@ -21,11 +21,9 @@ interface AddShowModalProps {
   setModalStatus: (value: boolean) => void;
   shows: ShowType[];
   setShows: (value: ShowType[]) => void;
-  type: "show" | "movie";
 }
 
 interface FoundShow {
-  show_id: number;
   name: string;
   overview: string;
   posterURL: string;
@@ -36,14 +34,17 @@ export default function AddShowModal({
   setModalStatus,
   shows,
   setShows,
-  type,
 }: AddShowModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<{
+    id: number;
+    name: string;
+    overview: string;
+    posterURL: string;
+  }[]>([]);
 
   const [show, setShow] = useState<FoundShow>({
-    show_id: 0,
     name: "",
     overview: "",
     posterURL: "",
@@ -54,7 +55,6 @@ export default function AddShowModal({
     setSearch("");
     setSearchResult([]);
     setShow({
-      show_id: 0,
       name: "",
       overview: "",
       posterURL: "",
@@ -68,17 +68,17 @@ export default function AddShowModal({
       return;
     }
 
-    axios
-      .post(`${import.meta.env.VITE_API_PATH || ""}/${type}`, show)
-      .then((res) => {
-        if (res.status === 201) setShows([res.data, ...shows]);
+    ShowService.createShow(show)
+      .then((newShow) => {
+        setShows([newShow, ...shows]);
       })
       .catch((err) => {
-        console.error(err.response.status);
-        if (err.response.status === 409)
+        console.error(err);
+        if (err.response?.status === 409) {
           alert(
-            `the ${type} you're trying to add already exists in your list.`,
+            `the show you're trying to add already exists in your list.`,
           );
+        }
       })
       .finally(() => {
         closeModal();
@@ -86,25 +86,29 @@ export default function AddShowModal({
   };
 
   const filterAndMapSearchResult = (
-    searchResult: FoundShow[],
+    searchResult: {
+      id: number;
+      name: string;
+      overview: string;
+      posterURL: string;
+    }[],
   ): JSX.Element[] => {
     const result: JSX.Element[] = [];
 
-    // Time complexity: O(n)
-    searchResult.forEach(({ show_id, name, overview, posterURL }, index) => {
+    searchResult.forEach(({ name, overview, posterURL: poster_path }, index) => {
+      const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
+      
       if (
         name &&
         overview &&
-        posterURL &&
-        !shows.find((show) => show.show_id === show_id)
+        posterURL
       ) {
         result.push(
           <li
-            key={index} // Consider using show_id instead of index for stable keys
+            key={index}
             className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
             onClick={() => {
               setShow({
-                show_id,
                 name,
                 overview,
                 posterURL,
@@ -117,7 +121,7 @@ export default function AddShowModal({
               <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
                 {name}
               </p>
-              <p className="custom-clamp overflow-hidden text-ellipsis text-sm font-light">
+              <p className="overflow-hidden text-ellipsis text-sm font-light">
                 {overview}
               </p>
             </div>
@@ -133,42 +137,38 @@ export default function AddShowModal({
     if (!debouncedSearchTerm) {
       setSearchResult([]);
       return;
-    } else {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_PATH || ""
-          }/search/${type}?q=${debouncedSearchTerm}`,
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200) setSearchResult(res.data);
-          else
-            alert(
-              "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
-            );
-        });
     }
-  }, [debouncedSearchTerm, type]);
+    
+    ShowService.searchShows(debouncedSearchTerm)
+      .then((results) => {
+        setSearchResult(results);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert(
+          "something went wrong! please refresh the page and try again or contact the developer. Thank you 😘",
+        );
+      });
+  }, [debouncedSearchTerm]);
 
   return (
     <Dialog open={modalStatus} onOpenChange={setModalStatus}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a {type}</DialogTitle>
+          <DialogTitle>Add a show</DialogTitle>
           <DialogDescription>
-            Add the {type} you watched and keep track of it.
+            Add the show you watched and keep track of it.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Search Section */}
           <div className="space-y-1">
             <Label htmlFor="searchInput" className="text-sm font-medium">
-              Search the {type} you want to add
+              Search the show you want to add
             </Label>
             <Input
               id="searchInput"
-              placeholder={`Search ${type}...`}
+              placeholder={`Search show...`}
               value={searchTerm}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-md"

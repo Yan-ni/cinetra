@@ -1,5 +1,5 @@
 export interface ShowType {
-    _id: string;
+    id: string;
     name: string;
     overview: string;
     posterURL: string;
@@ -7,6 +7,26 @@ export interface ShowType {
     episodesWatched: number;
     completed: boolean;
     favorite: boolean;
-    user_id: string;
-    show_id: number;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface MovieType {
+    id: string;
+    name: string;
+    overview?: string;
+    posterURL?: string;
+    favorite: boolean;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface UserType {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
 }

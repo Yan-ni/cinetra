@@ -1,95 +1,191 @@
+import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { MovieService } from "@/services";
 
-// components
-import Show from "../components/Show.tsx";
+import MovieModal from "../modals/MovieModal.tsx";
+import AddMovieModal from "../modals/AddMovieModal.tsx";
 
-// modals
-import ShowModal from "../modals/ShowModal.tsx";
-import AddShowModal from "../modals/AddShowModal.tsx";
+import Movie from "@/components/Movie.tsx";
+import { Button } from "@/components/ui/button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { MovieType } from "@/types/index.ts";
+import { RefreshCw, Search } from "lucide-react";
 
-function ShowScreen() {
-  const [addMovieModalStatus, setAddMovieModalStatus] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [search, setSearch] = useState("");
+interface ListFiltersType {
+  favoriteFilter?: "favorite" | "notFavorite";
+}
+
+export default function MoviesPage() {
+  const [addMovieModalStatus, setAddMovieModalStatus] = useState<boolean>(false);
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [filters, setFilters] = useState<ListFiltersType>({});
   const navigate = useNavigate();
+  const [key, setKey] = useState(+new Date());
 
   useEffect(() => {
-    axios.defaults.headers.common["Authorization"] =
-      localStorage.getItem("Authorization");
-    const loadShows = async () => {
+    const loadMovies = async () => {
       try {
-        const result = await axios.get(
-          `${import.meta.env.VITE_API_PATH || ""}/movie`,
-        );
-
-        if (result.status === 200 && Array.isArray(result.data))
-          setMovies(result.data);
+        const moviesData = await MovieService.getAllMovies();
+        setMovies(moviesData);
       } catch (error) {
-        if (error.response.status === 401) {
-          navigate("/login");
-        }
-        console.error("error occured loading shows");
-        if (import.meta.env.DEV) console.error(error);
+        console.error("error occurred loading movies", error);
+        navigate("/login");
       }
     };
 
-    loadShows();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadMovies();
   }, []);
 
   return (
-    <div className="app">
-      <h1 className="text-align-center">Movie List</h1>
-
-      <input
-        type="text"
-        name="search"
-        placeholder="search for a movie in your list"
-        value={search}
-        onChange={(e) => setSearch(e.target.value.toLowerCase())}
-      />
-
-      <button
-        className="btn-primary"
-        onClick={() => setAddMovieModalStatus(true)}
-      >
-        Add a movie
-      </button>
-      <AddShowModal
-        type="movie"
-        modalStatus={addMovieModalStatus}
-        setModalStatus={setAddMovieModalStatus}
-        shows={movies}
-        setShows={setMovies}
-      />
-
-      <div className="shows w-100 gap-1 mt-1">
-        {movies
-          ?.filter((movie) => movie.name.toLowerCase().includes(search))
-          .map((movie) => (
-            <Show
-              type="movie"
-              key={movie._id}
-              {...movie}
-              shows={movies}
-              setShows={setMovies}
-              setSelectedShow={setSelectedMovie}
+    <div className="px-4 py-6 lg:px-8 lg:py-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Movie List</h1>
+        <div className="flex items-center gap-3">
+          <InputGroup>
+            <InputGroupInput
+              id="search"
+              type="text"
+              name="search"
+              placeholder="Search for a movie..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              className="w-64"
             />
-          ))}
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
+          <Button
+            onClick={() => setAddMovieModalStatus(true)}
+            className="font-medium"
+          >
+            Add a Movie
+          </Button>
+          <AddMovieModal
+            modalStatus={addMovieModalStatus}
+            setModalStatus={setAddMovieModalStatus}
+            movies={movies}
+            setMovies={setMovies}
+          />
+        </div>
       </div>
 
-      <ShowModal
-        type="movie"
-        selectedShow={selectedMovie}
-        closeModal={() => setSelectedMovie(null)}
-        shows={movies}
-        setShows={setMovies}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Select
+            key={`favorite-${key}`}
+            name="favoriteFilter"
+            onValueChange={(value: "favorite" | "notFavorite") =>
+              setFilters({ ...filters, favoriteFilter: value })
+            }
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="All favorites" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="favorite">Favorite</SelectItem>
+              <SelectItem value="notFavorite">Not Favorite</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {filters.favoriteFilter && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setFilters({
+                  favoriteFilter: undefined,
+                });
+                setKey(+new Date());
+              }}
+              className="flex items-center gap-1.5 h-9"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <Separator className="mb-6" />
+
+      {(() => {
+        const filteredMovies = movies?.filter((movie) => {
+          if (!movie.name.toLowerCase().includes(search)) return false;
+
+          if (filters.favoriteFilter === "favorite" && movie.favorite !== true)
+            return false;
+
+          if (
+            filters.favoriteFilter === "notFavorite" &&
+            movie.favorite !== false
+          )
+            return false;
+
+          return true;
+        });
+
+        if (filteredMovies.length === 0) {
+          return (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <div className="text-center space-y-4">
+                <div className="text-6xl mb-4">🎬</div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {movies.length === 0 ? "No movies yet" : "No movies found"}
+                </h3>
+                <p className="text-gray-500 max-w-md">
+                  {movies.length === 0
+                    ? "Start building your collection by adding your first movie!"
+                    : "Try adjusting your search or filters to find what you're looking for."}
+                </p>
+                {movies.length === 0 && (
+                  <Button
+                    onClick={() => setAddMovieModalStatus(true)}
+                    className="mt-4"
+                  >
+                    Add Your First Movie
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8  gap-4 w-full gap-1 mt-1">
+            {filteredMovies.map((movie) => (
+              <Movie
+                key={movie.id}
+                {...movie}
+                movies={movies}
+                setMovies={setMovies}
+                setSelectedMovie={setSelectedMovie}
+              />
+            ))}
+          </div>
+        );
+      })()}
+
+      <MovieModal
+        selectedMovie={selectedMovie}
+        closeModal={() => setSelectedMovie("")}
+        movies={movies}
+        setMovies={setMovies}
       />
     </div>
   );
 }
-
-export default ShowScreen;

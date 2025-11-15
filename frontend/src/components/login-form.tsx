@@ -5,12 +5,12 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 interface LoginFormProps extends React.ComponentProps<"form"> {
-  handleSubmit?: (credentials: { username: string; password: string }) => void;
+  handleSubmit?: (credentials: { email: string; password: string }) => void;
 }
 
 export function LoginForm({ className, handleSubmit: onSubmit, ...props }: LoginFormProps) {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -41,17 +41,17 @@ export function LoginForm({ className, handleSubmit: onSubmit, ...props }: Login
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Login to your account</h1>
         <p className="text-muted-foreground text-sm text-balance">
-          Enter your username below to login to your account
+          Enter your email below to login to your account
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="email">Email</Label>
           <Input
-            id="username"
-            type="text"
-            placeholder="e.g., John"
-            value={formData.username}
+            id="email"
+            type="email"
+            placeholder="name@example.com"
+            value={formData.email}
             onChange={handleChange}
             required
           />
