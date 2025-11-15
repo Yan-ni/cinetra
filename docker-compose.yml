@@ -17,6 +17,17 @@ services:
     ports:
       - 5432:5432
 
+  migrate:
+    container_name: cinetra-migrate
+    build: .
+    restart: no
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["npx", "prisma", "migrate", "deploy"]
+
   app:
     container_name: cinetra-app
     build: .
@@ -28,8 +39,8 @@ services:
       API_AUTHORIZATION: ${API_AUTHORIZATION}
       DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
       - "${PORT}:${PORT}"
 
