@@ -26,7 +26,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: ["pnpm", "prisma", "migrate", "deploy"]
+    command: ["npx", "prisma", "migrate", "deploy"]
 
   app:
     container_name: cinetra-app
