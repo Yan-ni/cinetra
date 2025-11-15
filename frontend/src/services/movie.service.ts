@@ -16,11 +16,9 @@ interface UpdateMovieData {
 }
 
 interface MovieSearchResult {
-  id: number;
-  title: string;
+  name: string;
   overview: string;
-  poster_path: string;
-  release_date: string;
+  posterURL: string;
 }
 
 class MovieServiceClass extends ApiService {

@@ -4,12 +4,11 @@ WORKDIR /frontend
 
 COPY frontend/package*.json ./
 
-RUN npm install
+RUN pnpm install
 
 COPY frontend .
 
-RUN npm run build
-
+RUN pnpm run build
 
 FROM node:25.1.0-alpine3.22
 
@@ -17,14 +16,14 @@ WORKDIR /backend
 
 COPY backend/package*.json ./
 
-RUN npm install
+RUN pnpm install
 
 COPY backend .
 
-RUN npx prisma generate
+RUN pnpm prisma generate
 
-RUN npm run build
+RUN pnpm run build
 
 COPY --from=frontend-builder /frontend/dist ./dist/ui
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
