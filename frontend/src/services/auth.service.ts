@@ -1,7 +1,7 @@
 import { ApiService } from "./api.service";
 
 interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -13,11 +13,6 @@ interface SignupCredentials {
 
 interface AuthResponse {
   token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
 }
 
 class AuthServiceClass extends ApiService {
@@ -25,9 +20,11 @@ class AuthServiceClass extends ApiService {
     const response = await this.post<AuthResponse>("/auth/login", credentials);
     
     if (response.data.token) {
-      localStorage.setItem("Authorization", response.data.token);
+      localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
     }
     
+    console.log("Login response data:", response.data);
+
     return response.data;
   }
 
@@ -35,9 +32,9 @@ class AuthServiceClass extends ApiService {
     const response = await this.post<AuthResponse>("/auth/signup", credentials);
     
     if (response.data.token) {
-      localStorage.setItem("Authorization", response.data.token);
+      localStorage.setItem("Authorization", `Bearer ${response.data.token}`);
     }
-    
+
     return response.data;
   }
 

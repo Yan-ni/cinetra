@@ -13,7 +13,7 @@ export default function LoginPage() {
   }) => {
     try {
       await AuthService.login({
-        username: credentials.email,
+        email: credentials.email,
         password: credentials.password,
       });
       updateAuth(); // Update auth state immediately
