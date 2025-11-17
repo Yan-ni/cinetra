@@ -15,18 +15,13 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useDebounce from "@/hooks/use-debounce";
 import { ShowType } from "@/types";
+import SearchResultItem, { SearchResult } from "@/components/search-result-item";
 
 interface AddShowModalProps {
   modalStatus: boolean;
   setModalStatus: (value: boolean) => void;
   shows: ShowType[];
   setShows: (value: ShowType[]) => void;
-}
-
-interface FoundShow {
-  name: string;
-  overview: string;
-  posterURL: string;
 }
 
 export default function AddShowModal({
@@ -37,14 +32,9 @@ export default function AddShowModal({
 }: AddShowModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [searchResult, setSearchResult] = useState<{
-    id: number;
-    name: string;
-    overview: string;
-    posterURL: string;
-  }[]>([]);
+  const [searchResults, setSearchResult] = useState<SearchResult[]>([]);
 
-  const [show, setShow] = useState<FoundShow>({
+  const [show, setShow] = useState<SearchResult>({
     name: "",
     overview: "",
     posterURL: "",
@@ -85,52 +75,15 @@ export default function AddShowModal({
       });
   };
 
-  const filterAndMapSearchResult = (
-    searchResult: {
-      id: number;
-      name: string;
-      overview: string;
-      posterURL: string;
-    }[],
-  ): JSX.Element[] => {
-    const result: JSX.Element[] = [];
+  const onSearchResultClick = (searchResult: SearchResult) => {
+    const { name, overview, posterURL } = searchResult;
 
-    searchResult.forEach(({ name, overview, posterURL: poster_path }, index) => {
-      const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
-      
-      if (
-        name &&
-        overview &&
-        posterURL
-      ) {
-        result.push(
-          <li
-            key={index}
-            className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
-            onClick={() => {
-              setShow({
-                name,
-                overview,
-                posterURL,
-              });
-              setSearch("");
-            }}
-          >
-            <img src={posterURL} className="h-16 aspect-[3/4]" alt="" />
-            <div>
-              <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-                {name}
-              </p>
-              <p className="overflow-hidden text-ellipsis text-sm font-light">
-                {overview}
-              </p>
-            </div>
-          </li>,
-        );
-      }
+    setShow({
+      name,
+      overview,
+      posterURL,
     });
-
-    return result;
+    setSearch("");
   };
 
   useEffect(() => {
@@ -173,15 +126,19 @@ export default function AddShowModal({
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-md"
             />
-            {searchResult.length > 0 && (
+            {searchResults.length > 0 && (
               <ScrollArea className="h-[200px] w-full rounded-md border">
                 <ul className="p-2 space-y-1">
-                  {filterAndMapSearchResult(searchResult).map((item, index) => (
+                  {searchResults.map((searchResult, index) => (
                     <li
                       key={index}
                       className="px-2 py-1 text-sm hover:bg-muted rounded cursor-pointer"
                     >
-                      {item}
+                      <SearchResultItem
+                        index={index}
+                        searchResult={searchResult}
+                        onSearchResultClick={onSearchResultClick}
+                      />
                     </li>
                   ))}
                 </ul>
