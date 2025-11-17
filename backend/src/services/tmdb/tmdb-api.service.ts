@@ -1,8 +1,8 @@
 import { TMDBService, SearchResult } from './tmdb.service';
+import axios, { AxiosInstance } from 'axios';
 
 interface ApiResponse {
   results: Array<{
-    id: string;
     title?: string;
     name?: string;
     overview: string;
@@ -11,11 +11,15 @@ interface ApiResponse {
 }
 
 export class TMDBApiService implements TMDBService {
-  private apiAuthorization: string;
-  private baseUrl: string = 'https://api.themoviedb.org/3';
+  private fetcher: AxiosInstance;
 
-  constructor(apiAuthorization: string) {
-    this.apiAuthorization = apiAuthorization;
+  constructor() {
+    this.fetcher = axios.create({
+      baseURL: 'https://api.themoviedb.org/3',
+      headers: {
+        Authorization: process.env.API_AUTHORIZATION,
+      },
+    })
   }
 
   async searchShows(query: string): Promise<SearchResult[]> {
@@ -32,30 +36,16 @@ export class TMDBApiService implements TMDBService {
     }
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/search/${type}?query=${encodeURIComponent(query)}`,
-        { 
-          headers: { 
-            Authorization: this.apiAuthorization 
-          } 
+      const response = await this.fetcher.get<ApiResponse>(`/search/${type}?query=${encodeURIComponent(query)}`);
+
+      const searchResults: SearchResult[] = response.data.results.map(
+        ({ title, name, overview, poster_path }) => {
+          return ({
+            name: name || title || '',
+            overview,
+            posterURL: poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '',
+          })
         }
-      );
-
-      if (response.status !== 200) {
-        throw new Error(
-          `TMDB API responded with status code ${response.status}`
-        );
-      }
-
-      const responseJson: ApiResponse = await response.json() as ApiResponse;
-
-      const searchResults: SearchResult[] = responseJson.results.map(
-        ({ id, title, name, overview, poster_path }) => ({
-          show_id: id,
-          name: name || title || '',
-          overview,
-          posterURL: poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '',
-        })
       );
 
       return searchResults;

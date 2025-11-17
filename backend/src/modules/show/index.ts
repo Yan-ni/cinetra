@@ -8,7 +8,7 @@ import { DeleteCommand } from './use-cases/delete-command/delete.command';
 import { TMDBApiService } from '../../services/tmdb/tmdb-api.service';
 
 const showRepository = new ShowPrismaRepository();
-const tmdbService = new TMDBApiService(process.env.API_AUTHORIZATION || '');
+const tmdbService = new TMDBApiService();
 
 export const showModule = {
   Queries: {

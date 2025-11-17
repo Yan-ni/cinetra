@@ -15,18 +15,13 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useDebounce from "@/hooks/use-debounce";
 import { MovieType } from "@/types";
+import SearchResultItem, { SearchResult } from "@/components/search-result-item";
 
 interface AddMovieModalProps {
   modalStatus: boolean;
   setModalStatus: (value: boolean) => void;
   movies: MovieType[];
   setMovies: (value: MovieType[]) => void;
-}
-
-interface FoundMovie {
-  name: string;
-  overview: string;
-  posterURL: string;
 }
 
 export default function AddMovieModal({
@@ -37,13 +32,9 @@ export default function AddMovieModal({
 }: AddMovieModalProps) {
   const [searchTerm, setSearch] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [searchResult, setSearchResult] = useState<{
-    name: string;
-    overview: string;
-    posterURL: string;
-  }[]>([]);
+  const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
 
-  const [movie, setMovie] = useState<FoundMovie>({
+  const [movie, setMovie] = useState<SearchResult>({
     name: "",
     overview: "",
     posterURL: "",
@@ -58,6 +49,17 @@ export default function AddMovieModal({
       overview: "",
       posterURL: "",
     });
+  };
+
+  const onSearchResultClick = (searchResult: SearchResult) => {
+    const { name, overview, posterURL } = searchResult;
+    
+    setMovie({
+      name,
+      overview,
+      posterURL,
+    });
+    setSearch("");
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,53 +84,6 @@ export default function AddMovieModal({
       .finally(() => {
         closeModal();
       });
-  };
-
-  const filterAndMapSearchResult = (
-    searchResult: {
-      name: string;
-      overview: string;
-      posterURL: string;
-    }[],
-  ): JSX.Element[] => {
-    const result: JSX.Element[] = [];
-
-    searchResult.forEach(({ name, overview, posterURL: poster_path }, index) => {
-      const posterURL = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : "";
-      
-      if (
-        name &&
-        overview &&
-        posterURL
-      ) {
-        result.push(
-          <li
-            key={index}
-            className="py-2 px-3 hover:bg-accent rounded-md cursor-pointer flex gap-2.5"
-            onClick={() => {
-              setMovie({
-                name,
-                overview,
-                posterURL,
-              });
-              setSearch("");
-            }}
-          >
-            <img src={posterURL} className="h-16 aspect-[3/4]" alt="" />
-            <div>
-              <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-                {name}
-              </p>
-              <p className="custom-clamp overflow-hidden text-ellipsis text-sm font-light">
-                {overview}
-              </p>
-            </div>
-          </li>,
-        );
-      }
-    });
-
-    return result;
   };
 
   useEffect(() => {
@@ -174,12 +129,16 @@ export default function AddMovieModal({
             {searchResult.length > 0 && (
               <ScrollArea className="h-[200px] w-full rounded-md border">
                 <ul className="p-2 space-y-1">
-                  {filterAndMapSearchResult(searchResult).map((item, index) => (
+                  {searchResult.map((item, index) => (
                     <li
                       key={index}
                       className="px-2 py-1 text-sm hover:bg-muted rounded cursor-pointer"
                     >
-                      {item}
+                      <SearchResultItem
+                        index={index}
+                        searchResult={item}
+                        onSearchResultClick={onSearchResultClick}
+                      />
                     </li>
                   ))}
                 </ul>

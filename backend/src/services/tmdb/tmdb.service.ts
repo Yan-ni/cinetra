@@ -1,5 +1,4 @@
 export interface SearchResult {
-  show_id: string;
   name: string;
   overview: string;
   posterURL: string;
